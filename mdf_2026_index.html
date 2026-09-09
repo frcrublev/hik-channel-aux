@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programa MDF 2026 · Hikvision Argentina</title>
+<meta name="description" content="Nuevo Programa MDF 2026 de Hikvision Argentina / 海康威视阿根廷 MDF 2026 合作伙伴计划.">
+<style>
+  :root{
+    --ink:#F2EEF8;
+    --ink-dim:#A99EC4;
+    --void:#0A0417;
+    --violet:#1B0B36;
+    --magenta:#FF2E9A;
+    --cyan:#3FC8FF;
+    --electric:#8B4DFF;
+    --line:rgba(139,77,255,.28);
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+  body{
+    margin:0;
+    background:
+      radial-gradient(900px 600px at 78% -8%, rgba(255,46,154,.22), transparent 60%),
+      radial-gradient(760px 520px at 8% 12%, rgba(63,200,255,.14), transparent 62%),
+      linear-gradient(180deg,#0A0417 0%,#140729 45%,#0A0417 100%);
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+    font-size:17px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:var(--cyan)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(14px);
+    background:rgba(10,4,23,.78);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex;align-items:center;gap:28px;height:60px;overflow-x:auto;scrollbar-width:none}
+  nav .wrap::-webkit-scrollbar{display:none}
+  nav .brand{font-weight:800;letter-spacing:.02em;white-space:nowrap;font-style:italic}
+  nav a{color:var(--ink-dim);text-decoration:none;font-size:14.5px;white-space:nowrap}
+  nav a:hover{color:var(--ink)}
+  nav a.lang{margin-left:auto;border:1px solid var(--line);border-radius:999px;padding:5px 14px;color:var(--ink)}
+
+  /* ---------- hero ---------- */
+  header{padding:104px 0 88px;position:relative;overflow:hidden}
+  .kicker{color:var(--ink-dim);font-size:15px;margin:0 0 18px}
+  h1{
+    font-size:clamp(46px,9vw,104px);
+    line-height:.92;margin:0;font-weight:800;letter-spacing:-.03em;
+  }
+  h1 .year{
+    background:linear-gradient(96deg,var(--cyan),var(--electric) 45%,var(--magenta));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .lede{font-size:clamp(19px,2.4vw,26px);color:var(--ink);margin:26px 0 0;max-width:24ch;font-weight:300}
+  .promise{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
+  .promise span{
+    border:1px solid var(--line);border-radius:999px;padding:8px 18px;
+    font-size:14.5px;color:var(--ink-dim);background:rgba(139,77,255,.07)
+  }
+  .hero-cta{margin-top:40px;display:inline-block;
+    background:linear-gradient(96deg,var(--magenta),var(--electric));
+    color:#fff;text-decoration:none;font-weight:700;padding:15px 32px;border-radius:999px;
+  }
+  .hero-cta:hover{filter:brightness(1.12)}
+
+  /* ---------- sections ---------- */
+  section{padding:76px 0;border-top:1px solid var(--line)}
+  h2{font-size:clamp(28px,4.2vw,42px);line-height:1.1;margin:0 0 12px;font-weight:700;letter-spacing:-.02em}
+  .sub{color:var(--ink-dim);margin:0 0 40px;max-width:62ch}
+  h3{font-size:20px;margin:0 0 8px;font-weight:600}
+
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media (max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+  .card{
+    border:1px solid var(--line);border-radius:16px;padding:24px;
+    background:linear-gradient(160deg,rgba(139,77,255,.12),rgba(10,4,23,.5));
+  }
+  .card p{margin:0;color:var(--ink-dim);font-size:15.5px}
+  .card .amount{display:block;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);
+    color:var(--cyan);font-weight:700;font-size:16px}
+
+  .then-now{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media (max-width:860px){.then-now{grid-template-columns:1fr}}
+  .col-then{border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px;background:rgba(255,255,255,.03)}
+  .col-now{border:1px solid var(--magenta);border-radius:16px;padding:24px;background:linear-gradient(160deg,rgba(255,46,154,.14),rgba(10,4,23,.4))}
+  .col-then h3,.col-now h3{margin-bottom:16px}
+  .col-then ul,.col-now ul{margin:0;padding-left:20px}
+  .col-then li,.col-now li{margin-bottom:10px}
+  .col-then li{color:var(--ink-dim)}
+
+  /* ---------- tier table ---------- */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
+  table{border-collapse:collapse;width:100%;min-width:900px;font-size:15px}
+  th,td{padding:14px 12px;text-align:center;border-bottom:1px solid rgba(139,77,255,.16)}
+  thead th{background:rgba(139,77,255,.18);font-weight:600;color:var(--ink)}
+  tbody th{text-align:left;color:var(--ink-dim);font-weight:500;white-space:nowrap;background:rgba(10,4,23,.5);position:sticky;left:0}
+  tbody tr:last-child td,tbody tr:last-child th{border-bottom:none}
+  .mdf-row td{color:var(--magenta);font-weight:700}
+  .zones{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+  @media (max-width:860px){.zones{grid-template-columns:1fr}}
+  .zone{border:1px solid var(--line);border-radius:14px;padding:18px}
+  .zone b{display:block;font-size:18px;margin-bottom:4px}
+  .zone span{color:var(--ink-dim);font-size:15px}
+  .zone .range{display:block;margin-top:12px;color:var(--cyan);font-weight:600}
+
+  /* ---------- steps ---------- */
+  ol.steps{list-style:none;counter-reset:s;padding:0;margin:0;display:grid;gap:12px}
+  ol.steps li{
+    counter-increment:s;display:flex;gap:18px;align-items:flex-start;
+    border:1px solid var(--line);border-radius:14px;padding:18px 22px;
+    background:linear-gradient(120deg,rgba(63,200,255,.07),transparent 60%);
+  }
+  ol.steps li::before{
+    content:counter(s);flex:0 0 auto;
+    width:34px;height:34px;border-radius:50%;
+    display:grid;place-items:center;font-weight:700;font-size:15px;
+    background:linear-gradient(140deg,var(--electric),var(--magenta));color:#fff;
+  }
+  ol.steps p{margin:4px 0 0;color:var(--ink-dim);font-size:15.5px}
+
+  .quarters{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  @media (max-width:860px){.quarters{grid-template-columns:1fr}}
+  .q{border:1px solid var(--line);border-radius:14px;padding:18px;background:rgba(139,77,255,.08)}
+  .q b{display:block;color:var(--cyan);font-size:17px;margin-bottom:6px}
+  .q.reset{border-color:var(--magenta);background:rgba(255,46,154,.12)}
+  .q.reset b{color:var(--magenta)}
+  .q p{margin:0;font-size:14.5px;color:var(--ink-dim)}
+
+  .note{border-left:3px solid var(--magenta);padding:14px 0 14px 18px;margin-top:28px;color:var(--ink-dim);max-width:70ch}
+  .pill-list{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
+  .pill-list li{border:1px solid var(--line);border-radius:999px;padding:9px 18px;font-size:15px}
+  .yes{border-color:rgba(63,200,255,.5)}
+  .no{border-color:rgba(255,46,154,.5);color:var(--ink-dim)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:64px 0 80px;text-align:center}
+  footer h2{margin-bottom:20px}
+  footer .contacts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:36px 0 40px;text-align:left}
+  @media (max-width:860px){footer .contacts{grid-template-columns:1fr}}
+  footer small{display:block;margin-top:36px;color:var(--ink-dim);font-size:13.5px}
+</style>
+<style>
+  nav button.lang{margin-left:auto;border:1px solid var(--line);border-radius:999px;padding:6px 16px;
+    color:var(--ink);background:rgba(139,77,255,.12);font:inherit;font-size:14.5px;cursor:pointer}
+  nav button.lang:hover{background:rgba(139,77,255,.28)}
+  [data-lang-pane]{display:none}
+  [data-lang-pane].is-active{display:block}
+</style>
+
+</head>
+<body>
+<div data-lang-pane="es" class="is-active" lang="es">
+
+<nav><div class="wrap">
+  <span class="brand">HIKVISION</span>
+  <button class="lang" type="button" data-switch="zh">中文</button>
+  <a href="#generar">Cómo se genera</a>
+  <a href="#niveles">Niveles</a>
+  <a href="#computa">Qué computa</a>
+  <a href="#quienes">Quiénes acceden</a>
+  <a href="#invertir">En qué invertir</a>
+  <a href="#proceso">Proceso</a>
+  <a href="#acumulacion">Acumulación</a>
+  <a href="#growth">Growth Investment</a>
+</div></nav>
+
+<header><div class="wrap">
+  <p class="kicker">Programa de Partners · Hikvision Argentina</p>
+  <h1>Nuevo Programa<br><span class="year">MDF 2026</span></h1>
+  <p class="lede">Más inversión para hacer crecer tu negocio.</p>
+  <div class="promise">
+    <span>Fondos visibles</span><span>Reglas claras</span><span>Activación simple</span>
+  </div>
+  <a class="hero-cta" href="https://www.hikvisionpartners.com.ar" target="_blank" rel="noopener">Entrar al Portal de Partners</a>
+</div></header>
+
+<section id="cambia"><div class="wrap">
+  <h2>¿Qué cambia para vos?</h2>
+  <p class="sub">Un MDF más visible, más simple y más fácil de activar. Menos administración, más foco en generar negocio.</p>
+  <div class="then-now">
+    <div class="col-then">
+      <h3>Antes</h3>
+      <ul>
+        <li>Procesos más manuales</li>
+        <li>Menor visibilidad del fondo</li>
+        <li>Seguimiento disperso</li>
+        <li>Planificación limitada</li>
+      </ul>
+    </div>
+    <div class="col-now">
+      <h3>Ahora</h3>
+      <ul>
+        <li>Fondo visible en el portal</li>
+        <li>Reglas claras por acción</li>
+        <li>Solicitud online</li>
+        <li>Seguimiento en portal</li>
+        <li>Mayor autonomía</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section id="generar"><div class="wrap">
+  <h2>¿Cómo generás tu MDF?</h2>
+  <p class="sub">Tus compras trimestrales generan automáticamente fondos disponibles para invertir en marketing. A mayor desarrollo de negocio con Hikvision, mayor capacidad de inversión.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Automático</h3><p>Se genera en base a tus compras trimestrales, según el tramo alcanzado. Desde USD 15.000 por trimestre.</p></div>
+    <div class="card"><h3>Visible en el portal</h3><p>Consultá tus fondos disponibles en tiempo real, sin pedirlos por mail.</p></div>
+    <div class="card"><h3>Listo para activar</h3><p>Usalo en campañas y acciones de marketing aprobadas dentro del catálogo del portal.</p></div>
+  </div>
+</div></section>
+
+<section id="niveles"><div class="wrap">
+  <h2>Tus compras desbloquean nuevos niveles</h2>
+  <p class="sub">El nivel se determina según las compras elegibles acumuladas durante cada trimestre calendario. Cada nuevo nivel desbloquea más fondos.</p>
+  <div class="zones">
+    <div class="zone"><b>Start</b><span>Ingresás al programa.</span><span class="range">USD 15K – 35K</span></div>
+    <div class="zone"><b>Growth Zone</b><span>Tu negocio en expansión.</span><span class="range">USD 45K – 100K</span></div>
+    <div class="zone"><b>Scale</b><span>Alcanzás el siguiente nivel.</span><span class="range">USD 125K – 400K</span></div>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Nivel</th><th>Start</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>Max</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Compras trimestrales elegibles (USD)</th><td>15K</td><td>20K</td><td>25K</td><td>35K</td><td>45K</td><td>55K</td><td>65K</td><td>75K</td><td>85K</td><td>100K</td><td>125K</td><td>150K</td><td>200K</td><td>250K</td><td>325K</td><td>400K</td></tr>
+        <tr class="mdf-row"><th scope="row">MDF base recibido (USD)</th><td>250</td><td>500</td><td>750</td><td>1.000</td><td>1.400</td><td>1.800</td><td>2.300</td><td>2.800</td><td>3.400</td><td>4.200</td><td>5.000</td><td>6.000</td><td>8.000</td><td>10.000</td><td>12.500</td><td>15.000</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><h3>USD 45K → USD 1.400</h3><p>Ingresás al core del programa.</p></div>
+    <div class="card"><h3>USD 100K → USD 4.200</h3><p>Gran aceleración de fondos.</p></div>
+    <div class="card"><h3>USD 250K → USD 10.000</h3><p>Major Partner. El máximo de inversión llega en USD 400K → USD 15.000.</p></div>
+  </div>
+</div></section>
+
+<section id="computa"><div class="wrap">
+  <h2>¿Qué compras computan?</h2>
+  <p class="sub">Tomamos tus compras trimestrales elegibles, con una metodología clara y verificable: compras elegibles − devoluciones y notas de crédito = volumen MDF del trimestre.</p>
+  <div class="grid g3">
+    <div class="card">
+      <h3>Qué se toma</h3>
+      <p>Compras Hikvision del trimestre: valor facturado en USD, sin IVA y sin costos financieros, valorizado según la lista correspondiente a la categoría comercial del cliente.</p>
+    </div>
+    <div class="card">
+      <h3>Qué ajustes aplican</h3>
+      <p>Las notas de crédito por devoluciones descuentan del acumulado, para reflejar el valor neto real de tus compras.</p>
+    </div>
+    <div class="card">
+      <h3>De dónde sale la información</h3>
+      <p>Fuente principal: reporte mensual de Sell-Out del distribuidor oficial. Si hay diferencias o faltantes, el Partner puede presentar facturas como respaldo para validación.</p>
+    </div>
+  </div>
+  <h3 style="margin-top:40px">Mayoristas habilitados</h3>
+  <ul class="pill-list" style="margin-top:12px">
+    <li class="yes">Big Dipper</li><li class="yes">Fiesa</li><li class="yes">Seguridad Centro</li><li class="yes">Selnet</li>
+  </ul>
+  <h3 style="margin-top:28px">Productos</h3>
+  <ul class="pill-list" style="margin-top:12px">
+    <li class="yes">Sí computa: productos de marca Hikvision</li>
+    <li class="no">No computa: HikSemi, EZVIZ y otras submarcas</li>
+  </ul>
+  <p class="note">Hikvision podrá incorporar o quitar mayoristas como centro de cómputo según la política comercial vigente. Las compras deben reportarse a través de los canales habilitados.</p>
+</div></section>
+
+<section id="quienes"><div class="wrap">
+  <h2>Un programa más abierto</h2>
+  <p class="sub">Antes el foco estaba en Dealer Black y Diamante. Hoy el alcance se amplía a más perfiles de canal que desarrollan activamente la marca y cumplen las condiciones del programa.</p>
+  <div class="grid g4">
+    <div class="card"><h3>Centrales de monitoreo</h3><p>De cierto tamaño y volumen de operación, que promuevan soluciones Hikvision.</p></div>
+    <div class="card"><h3>ISP y WISP</h3><p>Proveedores de Internet que integran y recomiendan soluciones Hikvision.</p></div>
+    <div class="card"><h3>Integradores Partner</h3><p>Que desarrollan proyectos y promueven soluciones en distintas verticales.</p></div>
+    <div class="card"><h3>Dealers de distinto tamaño</h3><p>Desde pequeños negocios hasta grandes distribuidores que cumplan las condiciones.</p></div>
+  </div>
+  <h3 style="margin-top:40px">Cuatro condiciones para acceder</h3>
+  <div class="grid g4" style="margin-top:12px">
+    <div class="card"><h3>Partner autorizado</h3><p>Canal registrado y aprobado por Hikvision.</p></div>
+    <div class="card"><h3>Categoría vigente</h3><p>Categoría Platino o superior, vigente durante el período correspondiente.</p></div>
+    <div class="card"><h3>Portal activo</h3><p>Registrado en el Portal de Partners y con información comercial actualizada.</p></div>
+    <div class="card"><h3>Good standing</h3><p>Cumplimiento de políticas comerciales, lineamientos de marca y estándares de conducta.</p></div>
+  </div>
+  <p class="note">El MDF es un beneficio, no un derecho adquirido. Hikvision puede ampliar, ajustar, suspender o retirar fondos según el desempeño del Partner, la calidad de ejecución de las acciones y el cumplimiento de las políticas del programa.</p>
+</div></section>
+
+<section id="invertir"><div class="wrap">
+  <h2>¿En qué podés invertir tu MDF?</h2>
+  <p class="sub">Dentro del portal encontrás un catálogo de acciones disponibles y elegís libremente según tus objetivos. Cada acción muestra su descripción, condiciones de uso, límite y documentación requerida.</p>
+  <div class="grid g4">
+    <div class="card"><h3>Brandeo de store</h3><p>Desarrollo de tiendas Hikvision.</p><span class="amount">100% del saldo MDF</span></div>
+    <div class="card"><h3>Capacitación</h3><p>Instancia de formación sobre valores, lineamientos e identidad de marca. Asistencia mínima de 20 personas.</p><span class="amount">USD 100 por acción</span></div>
+    <div class="card"><h3>E-commerce</h3><p>Landing o micrositio exclusivo Hikvision. Product ads.</p><span class="amount">50% del saldo MDF</span></div>
+    <div class="card"><h3>Evento</h3><p>Planificación y ejecución de acciones presenciales de marca.</p><span class="amount">USD 2.500 por acción</span></div>
+    <div class="card"><h3>Merchandising</h3><p>Artículos personalizados con la identidad de la marca. No aplica a productos de tecnología.</p><span class="amount">30% del saldo MDF</span></div>
+    <div class="card"><h3>Ploteo vehicular</h3><p>Brandeo de vehículos, exclusivo Hikvision.</p><span class="amount">USD 1.500 por acción</span></div>
+    <div class="card"><h3>Publicidad</h3><p>Comunicación en medios, vía pública y canales digitales. No aplica a e-commerce.</p><span class="amount">USD 800 por acción</span></div>
+    <div class="card"><h3>Spiff comercial</h3><p>Campaña de incentivo para fuerzas de ventas internas. Definir lineal del incentivo y cuotas.</p><span class="amount">USD 500 por acción</span></div>
+  </div>
+
+  <h3 style="margin-top:44px">Cómo funcionan los límites</h3>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card">
+      <h3>Límite por acción</h3>
+      <p>Se aplica por cada acción elegible que realices, y podés repetir la misma acción tantas veces como quieras respetando las condiciones. Ejemplo: capacitación a USD 100 por acción, con 10 capacitaciones elegibles, permite solicitar hasta USD 1.000 en total.</p>
+    </div>
+    <div class="card">
+      <h3>Límite por % del saldo</h3>
+      <p>Se calcula sobre tu saldo MDF disponible al momento de solicitar la acción. Ejemplo: con un saldo de USD 4.000, una acción al 50% permite hasta USD 2.000 y una al 100% hasta USD 4.000.</p>
+    </div>
+  </div>
+  <p class="note">Los límites pueden variar según la estrategia de promoción de Hikvision en cada trimestre. La versión vigente siempre está disponible en el portal.</p>
+</div></section>
+
+<section id="proceso"><div class="wrap">
+  <h2>De la idea al reintegro, todo desde el portal</h2>
+  <p class="sub">Todo el proceso queda trazado en la herramienta, sin mails ni planillas.</p>
+  <ol class="steps">
+    <li><div><h3>Elegí la acción</h3><p>Del catálogo disponible en el portal, según tus objetivos.</p></div></li>
+    <li><div><h3>Cargá la solicitud</h3><p>Con monto, fechas y descripción de la acción.</p></div></li>
+    <li><div><h3>Revisión de Marcom</h3><p>Marcom aprueba, observa o rechaza la solicitud desde el portal.</p></div></li>
+    <li><div><h3>Ejecutá la acción</h3><p>Una vez aprobada, la llevás adelante en el momento que mejor te sirva.</p></div></li>
+    <li><div><h3>Subí factura y evidencias</h3><p>Documentación completa de la acción ejecutada.</p></div></li>
+    <li><div><h3>Solicitá el reintegro y elegí el ND</h3><p>Desde la misma solicitud, indicando el distribuidor.</p></div></li>
+    <li><div><h3>NC cargada por el ND en el portal</h3><p>El tiempo de emisión de la nota de crédito depende del ND.</p></div></li>
+  </ol>
+  <div class="grid g3" style="margin-top:24px">
+    <div class="card"><h3>Asignación de fondos</h3><p>Al inicio de cada trimestre, normalmente dentro de los primeros 10 días hábiles.</p></div>
+    <div class="card"><h3>Aprobación y reintegros</h3><p>Si la documentación está completa y no hay errores, Hikvision aprueba en pocos días. Si hay observaciones, se devuelven desde el portal para corregir.</p></div>
+    <div class="card"><h3>Estados del proceso</h3><p>En revisión Hikvision · Observado · Aprobado por Hikvision · En manos del ND · NC emitida.</p></div>
+  </div>
+  <p class="note">No hace falta esperar al cierre del trimestre: podés pedir el reembolso apenas la acción esté ejecutada y tengas la documentación completa.</p>
+</div></section>
+
+<section id="acumulacion"><div class="wrap">
+  <h2>Tus fondos te acompañan todo el año</h2>
+  <p class="sub">El saldo no utilizado al cierre de cada trimestre se acumula automáticamente para el siguiente. No necesitás "quemar" el MDF al final de cada Q: podés reservarlo para una acción de mayor impacto.</p>
+  <div class="quarters">
+    <div class="q"><b>Q1</b><p>Hikvision asigna tu MDF para el primer trimestre.</p></div>
+    <div class="q"><b>Q2</b><p>Se suma el nuevo fondo y lo no utilizado de Q1.</p></div>
+    <div class="q"><b>Q3</b><p>Tus fondos siguen creciendo trimestre a trimestre.</p></div>
+    <div class="q"><b>Q4</b><p>Tenés todo el total acumulado del año a tu disposición.</p></div>
+    <div class="q reset"><b>31/12 · Reset anual</b><p>Todo fondo no reembolsado vence. Sin excepciones: el contador vuelve a USD 0.</p></div>
+  </div>
+</div></section>
+
+<section id="growth"><div class="wrap">
+  <h2>Growth Investment</h2>
+  <p class="sub">Además del MDF base, Hikvision puede asignar inversión adicional para iniciativas de alto impacto que formen parte de un plan de desarrollo conjunto. Se suma en el portal como fondo adicional.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Ejemplos de uso</h3>
+      <p>Apertura o desarrollo de un store exclusivo · participación en ferias de nicho · publicidad de alto impacto · campañas y promociones especiales · planificación estratégica conjunta con business plan.</p>
+    </div>
+    <div class="card">
+      <h3>Cómo se activa</h3>
+      <p>Identificás la iniciativa, definimos juntos objetivos y plan de acción, Hikvision evalúa alineación estratégica, impacto y viabilidad, y de ser aprobado se asigna el fondo adicional en el portal. Se evalúa caso por caso.</p>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <h2>Planificá. Activá. Crecé.</h2>
+  <p class="sub" style="margin:0 auto">Consultá tu saldo, solicitá acciones, hacé seguimiento y conocé el estado de tus reintegros en tiempo real.</p>
+  <a class="hero-cta" href="https://www.hikvisionpartners.com.ar" target="_blank" rel="noopener">Ir a hikvisionpartners.com.ar</a>
+  <div class="contacts">
+    <div class="card"><h3>Channel Sales</h3><p>Tu contacto comercial de confianza.</p></div>
+    <div class="card"><h3>HikAdvisor</h3><p>Si contás con el beneficio, consultá con tu HikAdvisor.</p></div>
+    <div class="card"><h3>Marcom Argentina</h3><p>El equipo de Marketing y Comunicaciones.</p></div>
+  </div>
+  <small>Hikvision Argentina · Programa MDF 2026. La asignación de MDF está sujeta a elegibilidad, categoría vigente, disponibilidad del programa y cumplimiento de las políticas de Hikvision.</small>
+</div></footer>
+
+</div>
+<div data-lang-pane="zh" lang="zh-CN">
+
+<nav><div class="wrap">
+  <span class="brand">HIKVISION</span>
+  <button class="lang" type="button" data-switch="es">Español</button>
+  <a href="#generar">额度怎么产生</a>
+  <a href="#niveles">等级表</a>
+  <a href="#computa">哪些采购计入</a>
+  <a href="#quienes">谁能参加</a>
+  <a href="#invertir">可投什么</a>
+  <a href="#proceso">申请流程</a>
+  <a href="#acumulacion">额度累积</a>
+  <a href="#growth">Growth Investment</a>
+</div></nav>
+
+<header><div class="wrap">
+  <p class="kicker">合作伙伴计划 · 海康威视阿根廷</p>
+  <h1>全新<br><span class="year">MDF 2026</span></h1>
+  <p class="lede">更多市场投入，帮你把生意做大。</p>
+  <div class="promise">
+    <span>额度看得见</span><span>规则说得清</span><span>申请做得快</span>
+  </div>
+  <a class="hero-cta" href="https://www.hikvisionpartners.com.ar" target="_blank" rel="noopener">进入合作伙伴门户</a>
+</div></header>
+
+<section id="cambia"><div class="wrap">
+  <h2>对你来说有什么变化？</h2>
+  <p class="sub">MDF 变得更透明、更简单、更容易启动。少花时间在行政流程上，多花在做生意上。</p>
+  <div class="then-now">
+    <div class="col-then">
+      <h3>以前</h3>
+      <ul>
+        <li>流程偏人工</li>
+        <li>额度不透明</li>
+        <li>跟进分散在邮件和表格里</li>
+        <li>可规划性有限</li>
+      </ul>
+    </div>
+    <div class="col-now">
+      <h3>现在</h3>
+      <ul>
+        <li>额度在门户中可见</li>
+        <li>每类活动都有明确规则</li>
+        <li>线上提交申请</li>
+        <li>门户内全程跟踪</li>
+        <li>更高的自主权</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section id="generar"><div class="wrap">
+  <h2>MDF 额度怎么产生？</h2>
+  <p class="sub">你的季度采购会自动生成可用于市场推广的资金。与海康威视的生意做得越大，可支配的市场投入就越多。</p>
+  <div class="grid g3">
+    <div class="card"><h3>自动生成</h3><p>按季度采购所落入的档位自动计算，起步门槛为每季度 15,000 美元。</p></div>
+    <div class="card"><h3>门户可查</h3><p>实时查看可用额度，不用再发邮件询问。</p></div>
+    <div class="card"><h3>随时可用</h3><p>用于门户目录中已获批准的市场活动与推广动作。</p></div>
+  </div>
+</div></section>
+
+<section id="niveles"><div class="wrap">
+  <h2>采购越多，解锁的等级越高</h2>
+  <p class="sub">等级按每个自然季度内累计的合格采购额确定，每上一个等级都会释放更多资金。</p>
+  <div class="zones">
+    <div class="zone"><b>Start 起步区</b><span>进入计划。</span><span class="range">15K – 35K 美元</span></div>
+    <div class="zone"><b>Growth Zone 成长区</b><span>生意进入扩张期。</span><span class="range">45K – 100K 美元</span></div>
+    <div class="zone"><b>Scale 规模区</b><span>迈向更高等级。</span><span class="range">125K – 400K 美元</span></div>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>等级</th><th>Start</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>Max</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">季度合格采购额（美元）</th><td>15K</td><td>20K</td><td>25K</td><td>35K</td><td>45K</td><td>55K</td><td>65K</td><td>75K</td><td>85K</td><td>100K</td><td>125K</td><td>150K</td><td>200K</td><td>250K</td><td>325K</td><td>400K</td></tr>
+        <tr class="mdf-row"><th scope="row">获得的 MDF 基础额度（美元）</th><td>250</td><td>500</td><td>750</td><td>1.000</td><td>1.400</td><td>1.800</td><td>2.300</td><td>2.800</td><td>3.400</td><td>4.200</td><td>5.000</td><td>6.000</td><td>8.000</td><td>10.000</td><td>12.500</td><td>15.000</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><h3>45K → 1,400 美元</h3><p>进入计划核心区间。</p></div>
+    <div class="card"><h3>100K → 4,200 美元</h3><p>额度大幅加速。</p></div>
+    <div class="card"><h3>250K → 10,000 美元</h3><p>Major Partner 级别；400K 对应上限 15,000 美元。</p></div>
+  </div>
+</div></section>
+
+<section id="computa"><div class="wrap">
+  <h2>哪些采购计入 MDF？</h2>
+  <p class="sub">计算口径清晰可核查：合格采购 − 退货及贷记单 = 当季 MDF 计算基数。</p>
+  <div class="grid g3">
+    <div class="card">
+      <h3>计入什么</h3>
+      <p>当季的海康威视采购：以美元开票金额计，不含增值税、不含财务费用，并按客户所属商务类别对应的价格表估值。</p>
+    </div>
+    <div class="card">
+      <h3>如何调整</h3>
+      <p>因退货产生的贷记单（Nota de Crédito）从累计额中扣减，以反映真实净采购额。</p>
+    </div>
+    <div class="card">
+      <h3>数据来源</h3>
+      <p>主要来源为官方分销商的月度 Sell-Out 报表。如有差异或遗漏，合作伙伴可提交发票作为凭证进行核验。</p>
+    </div>
+  </div>
+  <h3 style="margin-top:40px">目前纳入统计的批发商</h3>
+  <ul class="pill-list" style="margin-top:12px">
+    <li class="yes">Big Dipper</li><li class="yes">Fiesa</li><li class="yes">Seguridad Centro</li><li class="yes">Selnet</li>
+  </ul>
+  <h3 style="margin-top:28px">产品范围</h3>
+  <ul class="pill-list" style="margin-top:12px">
+    <li class="yes">计入：Hikvision 品牌产品</li>
+    <li class="no">不计入：HikSemi、EZVIZ 等子品牌</li>
+  </ul>
+  <p class="note">海康威视可根据现行商务政策增加或取消统计口径中的批发商。采购需通过指定渠道上报。</p>
+</div></section>
+
+<section id="quienes"><div class="wrap">
+  <h2>更开放的计划</h2>
+  <p class="sub">以往主要面向 Dealer Black 与 Diamante，现在覆盖范围扩大到更多积极推广品牌、并符合计划条件的渠道类型。</p>
+  <div class="grid g4">
+    <div class="card"><h3>监控中心（VMS）</h3><p>具备一定规模与运营量、并推广海康方案的监控中心。</p></div>
+    <div class="card"><h3>ISP 与 WISP</h3><p>集成并推荐海康方案的网络服务提供商。</p></div>
+    <div class="card"><h3>Partner 级集成商</h3><p>在各行业垂直市场开发项目并推广海康方案。</p></div>
+    <div class="card"><h3>各种规模的经销商</h3><p>从小型门店到大型分销商，只要符合计划条件均可。</p></div>
+  </div>
+  <h3 style="margin-top:40px">四项准入条件</h3>
+  <div class="grid g4" style="margin-top:12px">
+    <div class="card"><h3>授权合作伙伴</h3><p>已在海康威视注册并获批准的渠道。</p></div>
+    <div class="card"><h3>有效等级</h3><p>白金（Platino）或以上等级，并在对应周期内有效。</p></div>
+    <div class="card"><h3>门户账号活跃</h3><p>已注册合作伙伴门户，且商务信息保持更新。</p></div>
+    <div class="card"><h3>良好信用状态</h3><p>遵守商务政策、品牌规范与行为准则。</p></div>
+  </div>
+  <p class="note">MDF 是一项商务权益，而非既得权利。海康威视可根据合作伙伴的业绩表现、活动执行质量以及政策遵守情况，增加、调整、暂停或收回资金。</p>
+</div></section>
+
+<section id="invertir"><div class="wrap">
+  <h2>MDF 可以投在哪些地方？</h2>
+  <p class="sub">门户中有可选活动目录，你可以按自己的目标自由选择。每类活动都会显示说明、使用条件、额度上限和所需材料。</p>
+  <div class="grid g4">
+    <div class="card"><h3>门店品牌化</h3><p>海康威视门店形象建设。</p><span class="amount">MDF 余额的 100%</span></div>
+    <div class="card"><h3>培训</h3><p>传递品牌价值、规范与最佳实践的培训活动，最少 20 人参加。</p><span class="amount">每场 100 美元</span></div>
+    <div class="card"><h3>电商</h3><p>海康威视专属落地页或微站、产品广告。</p><span class="amount">MDF 余额的 50%</span></div>
+    <div class="card"><h3>线下活动</h3><p>策划并执行线下活动，提升品牌存在感与影响力。</p><span class="amount">每场 2,500 美元</span></div>
+    <div class="card"><h3>周边物料</h3><p>带品牌标识的定制物品，不适用于科技类产品。</p><span class="amount">MDF 余额的 30%</span></div>
+    <div class="card"><h3>车身贴</h3><p>车辆品牌化，仅限海康威视形象。</p><span class="amount">每次 1,500 美元</span></div>
+    <div class="card"><h3>广告投放</h3><p>媒体、户外与数字渠道的品牌传播，不适用于电商。</p><span class="amount">每次 800 美元</span></div>
+    <div class="card"><h3>销售激励（Spiff）</h3><p>面向内部销售团队的激励活动，需明确激励标准与名额。</p><span class="amount">每次 500 美元</span></div>
+  </div>
+
+  <h3 style="margin-top:44px">额度上限如何计算</h3>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card">
+      <h3>按单次活动计</h3>
+      <p>上限按每一次合格活动计算，同一类活动只要符合条件可以重复申请。例如：培训每场 100 美元，10 场合格培训最多可申请 1,000 美元。</p>
+    </div>
+    <div class="card">
+      <h3>按余额百分比计</h3>
+      <p>以申请当时的可用 MDF 余额为基数计算。例如余额 4,000 美元时，50% 的活动最高 2,000 美元，100% 的活动最高 4,000 美元。</p>
+    </div>
+  </div>
+  <p class="note">上限会随海康威视每季度的推广策略调整，最新版本始终以门户中的为准。</p>
+</div></section>
+
+<section id="proceso"><div class="wrap">
+  <h2>从想法到返款，全部在门户完成</h2>
+  <p class="sub">全流程在系统内留痕，不需要邮件和表格来回。</p>
+  <ol class="steps">
+    <li><div><h3>选择活动</h3><p>在门户目录中按你的目标选择。</p></div></li>
+    <li><div><h3>提交申请</h3><p>填写金额、起止日期与活动说明。</p></div></li>
+    <li><div><h3>Marcom 审核</h3><p>在门户中批准、提出修改意见或驳回。</p></div></li>
+    <li><div><h3>执行活动</h3><p>获批后，可在最合适的时间执行。</p></div></li>
+    <li><div><h3>上传发票与证明材料</h3><p>提交已执行活动的完整凭证。</p></div></li>
+    <li><div><h3>申请返款并选择分销商（ND）</h3><p>在同一条申请中指定分销商。</p></div></li>
+    <li><div><h3>ND 在门户上传贷记单（NC）</h3><p>开具贷记单的时间由分销商决定。</p></div></li>
+  </ol>
+  <div class="grid g3" style="margin-top:24px">
+    <div class="card"><h3>额度发放</h3><p>每季度初发放，通常在前 10 个工作日内完成。</p></div>
+    <div class="card"><h3>审批与返款</h3><p>材料齐全且无误时，海康威视会在几天内批准；若有问题，会通过门户退回修改。</p></div>
+    <div class="card"><h3>流程状态</h3><p>海康审核中 · 已提出意见 · 海康已批准 · 待分销商处理 · 贷记单已开具。</p></div>
+  </div>
+  <p class="note">不必等到季度结束：活动执行完毕、材料齐全即可申请返款。</p>
+</div></section>
+
+<section id="acumulacion"><div class="wrap">
+  <h2>额度全年跟着你走</h2>
+  <p class="sub">每季度末未使用的余额会自动结转到下一季度。不必在季末"突击花完"，可以把额度留给更有影响力的活动。</p>
+  <div class="quarters">
+    <div class="q"><b>Q1</b><p>海康威视发放第一季度的 MDF 额度。</p></div>
+    <div class="q"><b>Q2</b><p>新额度与 Q1 未用余额相加。</p></div>
+    <div class="q"><b>Q3</b><p>额度继续逐季累积。</p></div>
+    <div class="q"><b>Q4</b><p>全年累计额度可全部支配。</p></div>
+    <div class="q reset"><b>12/31 年度清零</b><p>所有未完成返款的额度到期作废，无例外，计数归零。</p></div>
+  </div>
+</div></section>
+
+<section id="growth"><div class="wrap">
+  <h2>Growth Investment 增长投资</h2>
+  <p class="sub">在 MDF 基础额度之外，海康威视可为纳入联合发展计划的高影响力项目提供额外投入，并作为附加资金加入门户账户。</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3>适用场景</h3>
+      <p>开设或改造专属门店 · 参加细分行业展会 · 高影响力广告投放 · 特别campaign与促销活动 · 带商业计划的联合战略规划。</p>
+    </div>
+    <div class="card">
+      <h3>如何启动</h3>
+      <p>先识别高影响力机会，双方共同确定目标与行动方案，海康威视评估战略契合度、预期影响与可行性，通过后在门户中发放额外资金。逐案评估。</p>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <h2>规划。启动。增长。</h2>
+  <p class="sub" style="margin:0 auto">实时查询余额、提交活动申请、跟踪进度和返款状态。</p>
+  <a class="hero-cta" href="https://www.hikvisionpartners.com.ar" target="_blank" rel="noopener">前往 hikvisionpartners.com.ar</a>
+  <div class="contacts">
+    <div class="card"><h3>Channel Sales</h3><p>你的商务对接人。</p></div>
+    <div class="card"><h3>HikAdvisor</h3><p>如已开通该权益，可直接咨询你的 HikAdvisor。</p></div>
+    <div class="card"><h3>Marcom Argentina</h3><p>阿根廷市场与传播团队。</p></div>
+  </div>
+  <small>海康威视阿根廷 · MDF 2026 计划。MDF 的发放取决于资格审核、等级有效性、计划可用性以及对海康威视各项政策的遵守情况。本页为西班牙语官方版本的中文参考译文，如有差异以西语版及门户内容为准。</small>
+</div></footer>
+
+</div>
+<script>
+(function(){
+  var panes={es:document.querySelector('[data-lang-pane="es"]'),zh:document.querySelector('[data-lang-pane="zh"]')};
+  function set(lang,remember){
+    Object.keys(panes).forEach(function(k){panes[k].classList.toggle('is-active',k===lang);});
+    document.documentElement.lang = (lang==='zh') ? 'zh-CN' : 'es';
+    document.title = (lang==='zh') ? 'MDF 2026 合作伙伴计划 · 海康威视阿根廷' : 'Programa MDF 2026 · Hikvision Argentina';
+    if(remember){try{localStorage.setItem('mdfLang',lang);}catch(e){}
+      if(history.replaceState){history.replaceState(null,'','#lang='+lang);}}
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-switch]');
+    if(!b) return;
+    e.preventDefault();
+    set(b.getAttribute('data-switch'),true);
+    window.scrollTo(0,0);
+  });
+  var start=null;
+  if(location.hash.indexOf('lang=zh')>-1) start='zh';
+  else if(location.hash.indexOf('lang=es')>-1) start='es';
+  if(!start){try{start=localStorage.getItem('mdfLang');}catch(e){}}
+  if(!start) start=(navigator.language||'').toLowerCase().indexOf('zh')===0?'zh':'es';
+  set(start,false);
+})();
+</script>
+
+</body>
+</html>
