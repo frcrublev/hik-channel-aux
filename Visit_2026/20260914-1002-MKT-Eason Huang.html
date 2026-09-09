@@ -1,156 +1,188 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agenda de Visitas · Buenos Aires</title>
+<title>拜访行程管理 · Eason Huang</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap">
 <style>
 :root{
-  --red:#e2001a;
-  --red-ink:#c00016;
-  --black:#111214;
-  --grey:#6e7175;
-  --rule:#d7d8da;
-  --ground:#eceded;
+  --ground:#f6f3f0;
   --paper:#ffffff;
+  --raised:#fbf9f7;
+  --ink:#2c2926;
+  --ink-2:#6d665f;
+  --ink-3:#98908a;
+  --line:#e8e1da;
+  --line-2:#d8cfc6;
+  --red:#c0392f;
+  --red-soft:#fbeeec;
+  --teal:#2f6f68;
+  --teal-soft:#e7f1ef;
+  --plum:#755079;
+  --plum-soft:#f2ebf3;
+  --green:#4a7c4e;
+  --amber:#9a6a1f;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#1a1815;
+    --paper:#232019;
+    --raised:#2b271f;
+    --ink:#efe9e1;
+    --ink-2:#b3a99d;
+    --ink-3:#867d72;
+    --line:#37322a;
+    --line-2:#494138;
+    --red:#e8837a;
+    --red-soft:#3a2723;
+    --teal:#7cc0b6;
+    --teal-soft:#1f302d;
+    --plum:#c3a3c8;
+    --plum-soft:#2e2532;
+    --green:#8fbe92;
+    --amber:#d6a75c;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#1a1815;--paper:#232019;--raised:#2b271f;--ink:#efe9e1;--ink-2:#b3a99d;--ink-3:#867d72;
+  --line:#37322a;--line-2:#494138;--red:#e8837a;--red-soft:#3a2723;--teal:#7cc0b6;--teal-soft:#1f302d;
+  --plum:#c3a3c8;--plum-soft:#2e2532;--green:#8fbe92;--amber:#d6a75c;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--ground);color:var(--black);
-  font-family:Barlow,"Microsoft YaHei","PingFang SC",system-ui,sans-serif;
-  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
-}
-.sheet{max-width:640px;margin:0 auto;background:var(--paper);min-height:100vh}
-.cond{font-family:"Barlow Condensed",Barlow,"Microsoft YaHei",sans-serif}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Source Sans 3","Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:15px;line-height:1.55}
+.serif{font-family:"Source Serif 4",Georgia,"Songti SC",serif}
+.num{font-variant-numeric:tabular-nums}
 
-/* masthead */
-.mast{background:var(--red);color:#fff;padding:30px 28px 26px}
-.brand{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;letter-spacing:.34em;margin-bottom:14px}
-.mast h1{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:46px;line-height:.94;
-  margin:0;letter-spacing:-.005em;text-wrap:balance}
-.mast p{margin:12px 0 0;font-weight:600;font-size:15px;letter-spacing:.01em}
+/* ---- masthead ---- */
+.top{background:var(--paper);border-bottom:1px solid var(--line)}
+.in{max-width:1180px;margin:0 auto;padding:0 26px}
+.top .in{padding-top:22px;padding-bottom:18px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 26px}
+h1{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:25px;margin:0;letter-spacing:-.005em}
+.sub{color:var(--ink-2);font-size:13.5px;margin-top:2px}
+.tally{margin-left:auto;display:flex;gap:22px}
+.tally div{text-align:right}
+.tally b{display:block;font-size:21px;font-weight:600;line-height:1.15}
+.tally span{font-size:11.5px;color:var(--ink-3);letter-spacing:.03em}
+.tally .ok b{color:var(--green)} .tally .todo b{color:var(--amber)}
 
-/* body */
-.pad{padding:26px 28px}
-.lede{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:27px;line-height:1.15;margin:0 0 16px}
-.lede em{font-style:normal;color:var(--red)}
-.pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
-.pill{border:1.5px solid var(--red);color:var(--red);border-radius:99px;padding:4px 14px;
-  font-size:13px;font-weight:600;white-space:nowrap}
+/* ---- toolbar ---- */
+.tools{background:var(--raised);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.tools .in{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:10px;padding-bottom:10px}
+input,select,button{font:inherit;font-size:13.5px;color:var(--ink);background:var(--paper);
+  border:1px solid var(--line-2);border-radius:7px;padding:5px 10px}
+input::placeholder{color:var(--ink-3)}
+button{cursor:pointer;transition:background .12s,border-color .12s}
+button:hover{border-color:var(--ink-3)}
+button.key{background:var(--red);border-color:var(--red);color:#fff;font-weight:500}
+:root[data-theme="dark"] button.key{color:#241413}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.key{color:#241413}}
+.grow{flex:1}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:4px}
 
-.eyebrow{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13px;letter-spacing:.2em;
-  color:var(--grey);border-top:2px solid var(--black);padding-top:9px;margin:0 0 4px}
+/* ---- day ---- */
+.wrap{max-width:1180px;margin:0 auto;padding:20px 26px 70px}
+.day{background:var(--paper);border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.dhead{display:flex;align-items:baseline;gap:12px;padding:11px 18px;background:var(--raised);border-bottom:1px solid var(--line)}
+.ddate{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:17px}
+.dwd{font-size:13px;color:var(--ink-2)}
+.dnote{margin-left:auto;font-size:12.5px;color:var(--ink-3)}
+.day.rest .dhead{background:var(--ground)}
+.day.rest .ddate,.day.rest .dwd{color:var(--ink-2)}
 
-/* day rows */
-.day{border-bottom:1px solid var(--rule);padding:16px 0}
-.day.last{border-bottom:none}
-.dhead{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
-.dnum{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:23px;color:var(--red);line-height:1}
-.dwd{font-size:13px;font-weight:600;color:var(--grey);letter-spacing:.02em}
-.dfree{margin-left:auto;font-size:13px;color:var(--grey)}
-
-.item{display:flex;gap:14px;padding:7px 0}
-.time{font-weight:600;font-size:14px;min-width:92px;color:var(--black);font-variant-numeric:tabular-nums}
-.time.tbd{color:var(--grey);font-weight:400}
-.body{flex:1;min-width:0}
-.who{font-weight:600;font-size:16px;line-height:1.3}
-.sub{font-size:13.5px;color:var(--grey);margin-top:1px}
-.st{border:none;background:none;padding:0;margin-left:8px;font:inherit;font-size:11px;font-weight:700;
-  font-family:"Barlow Condensed",sans-serif;letter-spacing:.14em;cursor:pointer;vertical-align:2px}
-.s-Confirmed{color:var(--red)} .s-Pending{color:#a06400} .s-Tentative{color:var(--grey)}
-.s-Cancelled{color:var(--grey);text-decoration:line-through}
-.item.off .who,.item.off .time{text-decoration:line-through;color:var(--grey)}
-.x{border:none;background:none;color:var(--rule);cursor:pointer;font-size:17px;line-height:1;padding:0 2px}
+.rows{padding:4px 0}
+.row{display:grid;grid-template-columns:120px minmax(210px,1.3fr) minmax(160px,1fr) minmax(180px,1.2fr) 108px 32px;
+  gap:0 16px;align-items:start;padding:10px 18px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row:hover{background:var(--raised)}
+.row.off{opacity:.55}
+.row.off .name{text-decoration:line-through}
+.cell{min-width:0}
+.time{font-weight:500;font-variant-numeric:tabular-nums}
+.time.tbd{color:var(--ink-3);font-style:italic;font-weight:400}
+.name{font-weight:600;font-size:15.5px;line-height:1.35}
+.kind{display:inline-block;margin-top:3px;font-size:11px;padding:1px 8px;border-radius:99px;font-weight:600;letter-spacing:.03em}
+.k-dpp{background:var(--teal-soft);color:var(--teal)}
+.k-int{background:var(--plum-soft);color:var(--plum)}
+.k-oth{background:var(--red-soft);color:var(--red)}
+.muted{color:var(--ink-2);font-size:13.5px}
+.muted.empty{color:var(--ink-3);font-style:italic}
+.note{display:block;color:var(--ink-3);font-size:12.5px;margin-top:2px}
+.st{width:100%;text-align:left;border:1px solid transparent;background:none;font-size:12px;font-weight:600;
+  letter-spacing:.02em;padding:2px 7px;border-radius:99px}
+.st:before{content:"● ";font-size:9px;vertical-align:1.5px}
+.s-Confirmed{color:var(--green);background:color-mix(in srgb,var(--green) 11%,transparent)}
+.s-Pending{color:var(--amber);background:color-mix(in srgb,var(--amber) 13%,transparent)}
+.s-Tentative{color:var(--ink-2);background:color-mix(in srgb,var(--ink-2) 11%,transparent)}
+.s-Cancelled{color:var(--red);background:var(--red-soft)}
+.x{border:none;background:none;color:var(--ink-3);font-size:17px;line-height:1;padding:2px 4px;opacity:0}
+.row:hover .x,.x:focus-visible{opacity:1}
 .x:hover{color:var(--red)}
-[contenteditable]:focus{outline:2px solid var(--red);outline-offset:2px}
-:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+[contenteditable]:focus{outline:2px solid var(--red);outline-offset:2px;border-radius:4px}
+[contenteditable]:hover{background:color-mix(in srgb,var(--ink) 5%,transparent);border-radius:4px}
 
-/* feature block */
-.block{background:var(--red);color:#fff;padding:20px 22px;margin:26px 0}
-.block .tag{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:12px;letter-spacing:.22em;margin-bottom:8px}
-.block h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:26px;line-height:1.1;margin:0}
-.block p{margin:8px 0 0;font-size:13.5px;font-weight:500;opacity:.92}
+.addrow{padding:9px 18px}
+.addrow button{border-style:dashed;color:var(--ink-2);background:none;width:100%;text-align:left;padding:6px 10px}
+.addrow button:hover{color:var(--red);border-color:var(--red)}
+.blank{padding:14px 18px;color:var(--ink-3);font-size:13.5px}
+.flag{display:flex;gap:9px;padding:9px 18px;background:var(--red-soft);color:var(--red);font-size:13px;
+  border-top:1px solid var(--line)}
+.foot{color:var(--ink-3);font-size:12.5px;max-width:74ch;margin-top:20px;line-height:1.6}
 
-/* dashed box */
-.todo{border:1.5px dashed var(--red);padding:18px 20px;margin-bottom:26px}
-.todo .tag{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:12px;letter-spacing:.22em;
-  color:var(--red);margin-bottom:8px}
-.todo ol{margin:0;padding-left:19px;font-size:14px}
-.todo li{margin:4px 0}
-
-.tools{display:flex;gap:8px;padding:0 28px 30px;flex-wrap:wrap;align-items:center}
-button.act{font-family:Barlow,sans-serif;font-size:13px;font-weight:600;border:1.5px solid var(--black);
-  background:none;color:var(--black);border-radius:99px;padding:5px 16px;cursor:pointer}
-button.act:hover{background:var(--black);color:#fff}
-button.act.solid{background:var(--red);border-color:var(--red);color:#fff}
-button.act.solid:hover{background:var(--red-ink)}
-.state{font-size:12.5px;color:var(--grey);margin-left:auto}
-.foot{padding:0 28px 40px;font-size:12.5px;color:var(--grey);line-height:1.55}
-
-@media (max-width:520px){
-  .mast h1{font-size:36px}
-  .pad,.tools,.foot{padding-left:20px;padding-right:20px}
-  .mast{padding:24px 20px}
-  .item{flex-wrap:wrap;gap:2px 14px}
-  .time{min-width:0}
-  .body{flex-basis:100%}
+@media (max-width:900px){
+  .row{grid-template-columns:110px 1fr 100px 28px;gap:2px 12px}
+  .row .cell.people{grid-column:2;order:3}
+  .row .cell.place{grid-column:2;order:4}
+  .tally{margin-left:0;width:100%}
+}
+@media (max-width:560px){
+  .in{padding-left:16px;padding-right:16px}
+  .wrap{padding-left:14px;padding-right:14px}
+  .row{grid-template-columns:1fr 30px}
+  .row .cell{grid-column:1}
+  .row .cell.st-cell{grid-column:1;justify-self:start}
+  .x{opacity:1}
 }
 @media print{
+  .tools,.x,.addrow,.foot{display:none!important}
   body{background:#fff}
-  .tools,.x,.foot{display:none!important}
-  .sheet{max-width:none}
-  .mast,.block{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .day{break-inside:avoid}
+  .day{break-inside:avoid;border-color:#ccc}
+  .row:hover{background:none}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="sheet">
-  <header class="mast">
-    <div class="brand">HIKVISION</div>
-    <h1>Agenda de Visitas<br>Buenos Aires</h1>
-    <p>Eason Huang · 14 – 21 SEP 2026</p>
-  </header>
 
-  <div class="pad">
-    <p class="lede">Ocho días, dos regiones,<br><em>seis socios DPP</em>.</p>
-    <div class="pills">
-      <span class="pill">AMBA · La Plata</span>
-      <span class="pill" id="pCount">—</span>
-      <span class="pill">Base · Blas Parera 51</span>
+<header class="top">
+  <div class="in">
+    <div>
+      <h1>阿根廷拜访行程管理</h1>
+      <div class="sub">20260914-1002-MKT-Eason Huang · 2026/09/14 – 09/21 · AMBA 与 La Plata · 驻地 Blas Parera 51</div>
     </div>
-
-    <p class="eyebrow">PROGRAMA · 14/09 – 21/09</p>
-    <div id="days"></div>
-
-    <div class="block">
-      <div class="tag">DESTACADO</div>
-      <h2>Workshop EasyIP · Vesta Sistemas de Seguridad</h2>
-      <p>Miércoles 16/09 · 17:00–20:00 · C. 36 863, B1902 La Plata · confirmado</p>
-    </div>
-
-    <div class="todo">
-      <div class="tag">PENDIENTE / 待办</div>
-      <ol>
-        <li>Guxotech (15/09) · 确认时间与地址</li>
-        <li>TS Sucursal Quilmes 与 La Plata (16/09) · 确认接待人</li>
-        <li>Alastor (17/09) · 确认议程</li>
-        <li>HUB (21/09) · 安排待定</li>
-      </ol>
-    </div>
+    <div class="tally num" id="tally"></div>
   </div>
+</header>
 
-  <div class="tools">
-    <button class="act" id="csv">CSV</button>
-    <button class="act" id="reset">恢复初稿</button>
-    <button class="act solid" id="prt">打印 / PDF</button>
-    <span class="state" id="state">本机保存</span>
+<div class="tools">
+  <div class="in">
+    <input id="q" placeholder="搜索客户、地址、备注" style="min-width:190px">
+    <select id="fType"></select>
+    <select id="fStatus"></select>
+    <span class="grow"></span>
+    <button id="add">+ 新增行程</button>
+    <button id="csv">导出 CSV</button>
+    <button id="reset">恢复初稿</button>
+    <button class="key" id="prt">打印 / PDF</button>
   </div>
-  <p class="foot">点击文字直接修改；点击状态在 CONFIRMADO → PENDIENTE → TENTATIVO → CANCELADO 之间循环。星期按日历计算，初稿中 16/09 起的标注已更正。</p>
+</div>
+
+<div class="wrap">
+  <div id="days"></div>
+  <p class="foot">所有字段点一下就能直接改，改动即时保存在本机浏览器里。状态点击可在「已确认 → 待确认 → 暂定 → 已取消」之间循环。每天末尾的虚线按钮可以往当天加一条行程，「+ 新增行程」则会让你先填日期。星期按日历自动计算，初稿中 9/16 起的星期标注已更正。</p>
 </div>
 
 <script>
@@ -159,105 +191,139 @@ const SEED=[
  {date:"2026-09-14",time:"11:30-12:30",type:"内部",customer:"Hikvision Argentina Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",notes:"K/Vpro + ColorVu 3.0 发布 DPP 沟通会"},
  {date:"2026-09-15",time:"",type:"DPP",customer:"Guxotech",people:"Francis Fang",status:"Pending",addr:"",city:"",notes:"时间与地址待确认"},
  {date:"2026-09-16",time:"10:00-12:00",type:"DPP",customer:"TS Sucursal · Quilmes",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"AMBA",notes:""},
- {date:"2026-09-16",time:"14:00-15:00",type:"DPP",customer:"TS Sucursal · La Plata",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"La Plata",notes:"与 Quilmes 之间约 60 分钟车程"},
+ {date:"2026-09-16",time:"14:00-15:00",type:"DPP",customer:"TS Sucursal · La Plata",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"La Plata",notes:""},
  {date:"2026-09-16",time:"17:00-20:00",type:"DPP",customer:"Vesta Sistemas de Seguridad",people:"Francis Fang + Ariel Donamari",status:"Confirmed",addr:"C. 36 863, B1902 La Plata",city:"La Plata",notes:"Workshop EasyIP"},
  {date:"2026-09-17",time:"10:00-12:00",type:"DPP",customer:"Alastor",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"AMBA",notes:""},
  {date:"2026-09-18",time:"",type:"内部",customer:"Capacitación Interna",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"AMBA",notes:"内部培训"},
  {date:"2026-09-21",time:"",type:"内部",customer:"HUB",people:"Francis Fang",status:"Pending",addr:"",city:"",notes:"安排待定"}
 ];
 const DAYS=["2026-09-14","2026-09-15","2026-09-16","2026-09-17","2026-09-18","2026-09-19","2026-09-20","2026-09-21"];
-const STATUSES=["Confirmed","Pending","Tentative","Cancelled"];
-const ES={Confirmed:"CONFIRMADO",Pending:"PENDIENTE",Tentative:"TENTATIVO",Cancelled:"CANCELADO"};
+const STATUS=["Confirmed","Pending","Tentative","Cancelled"];
+const ZH={Confirmed:"已确认",Pending:"待确认",Tentative:"暂定",Cancelled:"已取消"};
+const TYPES=["DPP","内部","其他"];
 const WD=["Domingo / 周日","Lunes / 周一","Martes / 周二","Miércoles / 周三","Jueves / 周四","Viernes / 周五","Sábado / 周六"];
-const KEY="visit-20260914-1002-MKT-EasonHuang";
-let rows=null,docRef=null,mine="",pending=false;
+const KEY="visit-20260914-1002-MKT-EasonHuang-v3";
 
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const clone=o=>JSON.parse(JSON.stringify(o));
 const dt=x=>new Date(x+"T12:00:00");
 const wd=x=>WD[dt(x).getDay()];
+const isRest=x=>[0,6].includes(dt(x).getDay());
+const fmt=x=>{const d=dt(x);return d.getFullYear()+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+String(d.getDate()).padStart(2,"0")};
 
-function persist(){
-  const p=clone(rows);
-  try{localStorage.setItem(KEY,JSON.stringify(p))}catch(e){}
-  if(docRef){mine=JSON.stringify(p);docRef.set({rows:p,updatedAt:Date.now()}).catch(()=>{})}
-}
-async function connect(){
-  if(typeof claude==="undefined"||!claude.use)return;
-  const db=await claude.use("db");if(!db)return;
-  docRef=db.doc("schedule/main");
-  document.getElementById("state").textContent="团队共享中";
-  docRef.onSnapshot(s=>{
-    const b=s.exists?s.data():null;
-    if(!b||!Array.isArray(b.rows)){persist();return}
-    const inc=JSON.stringify(b.rows);
-    if(inc===mine)return;
-    mine=inc;rows=b.rows;
-    if(document.activeElement&&document.activeElement.isContentEditable){pending=true;return}
-    render();
-  },()=>{document.getElementById("state").textContent="本机保存"});
-}
+let rows;
+try{rows=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!Array.isArray(rows)||!rows.length)rows=clone(SEED);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(rows))}catch(e){}};
 
-function ed(i,k,ph){return '<span contenteditable data-i="'+i+'" data-k="'+k+'">'+esc(rows[i][k]||ph||"")+"</span>"}
+function fill(id,vals,label){
+  const el=document.getElementById(id),cur=el.value;
+  el.innerHTML='<option value="">'+label+"</option>"+vals.map(v=>'<option value="'+esc(v[0])+'">'+esc(v[1])+"</option>").join("");
+  el.value=vals.some(v=>v[0]===cur)?cur:"";
+}
+function match(r){
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  const t=document.getElementById("fType").value,s=document.getElementById("fStatus").value;
+  if(t&&r.type!==t)return false;
+  if(s&&r.status!==s)return false;
+  if(q&&![r.customer,r.addr,r.city,r.notes,r.people].join(" ").toLowerCase().includes(q))return false;
+  return true;
+}
+function ed(i,k,ph,cls){
+  const v=rows[i][k];
+  return '<span contenteditable class="'+(cls||"")+(v?"":" empty")+'" data-i="'+i+'" data-k="'+k+'">'+esc(v||ph||"")+"</span>";
+}
 
 function render(){
-  pending=false;
+  fill("fType",TYPES.map(t=>[t,t]),"全部类型");
+  fill("fStatus",STATUS.map(s=>[s,ZH[s]]),"全部状态");
+
   const live=rows.filter(r=>r.status!=="Cancelled");
-  document.getElementById("pCount").textContent=live.length+" compromisos";
+  const busy=new Set(live.map(r=>r.date));
+  document.getElementById("tally").innerHTML=[
+    ["行程",live.length,""],
+    ["DPP 客户",new Set(live.filter(r=>r.type==="DPP").map(r=>r.customer)).size,""],
+    ["已确认",live.filter(r=>r.status==="Confirmed").length,"ok"],
+    ["待落实",live.filter(r=>["Pending","Tentative"].includes(r.status)).length,"todo"],
+    ["空档",DAYS.filter(d=>!busy.has(d)).length,""]
+  ].map(t=>'<div class="'+t[2]+'"><b>'+t[1]+"</b><span>"+t[0]+"</span></div>").join("");
+
+  const vis=rows.filter(match);
   const all=[...new Set(DAYS.concat(rows.map(r=>r.date)))].sort();
-  document.getElementById("days").innerHTML=all.map((x,n)=>{
-    const list=rows.map((r,i)=>[r,i]).filter(p=>p[0].date===x);
-    const dd=dt(x);
-    const items=list.length?list.map(p=>{
-      const r=p[0],i=p[1];
-      const sub=[r.people,r.addr||r.city,r.notes].filter(Boolean).join(" · ");
-      return '<div class="item'+(r.status==="Cancelled"?" off":"")+'">'
-        +'<div class="time'+(r.time?"":" tbd")+'">'+ed(i,"time","时间待定")+"</div>"
-        +'<div class="body"><div class="who">'+ed(i,"customer")
-        +'<button class="st s-'+esc(r.status)+'" data-st="'+i+'">'+ES[r.status]+"</button></div>"
-        +'<div class="sub">'+(sub?ed(i,"people")+" · "+ed(i,"addr",r.city||"地址待补")+(r.notes?" · "+ed(i,"notes"):""):ed(i,"people"))+"</div></div>"
-        +'<button class="x" data-x="'+i+'" title="删除">×</button></div>';
-    }).join(""):"";
-    const free=list.length?"":'<span class="dfree">'+(dd.getDay()%6===0?"Fin de semana · 无安排":"Libre · 可安排")+"</span>";
-    return '<div class="day'+(n===all.length-1?" last":"")+'"><div class="dhead">'
-      +'<span class="dnum">'+String(dd.getDate()).padStart(2,"0")+"/09</span>"
-      +'<span class="dwd">'+wd(x)+"</span>"+free+"</div>"+items+"</div>";
+  document.getElementById("days").innerHTML=all.map(x=>{
+    const list=rows.map((r,i)=>[r,i]).filter(p=>p[0].date===x&&vis.includes(p[0]));
+    const n=list.filter(p=>p[0].status!=="Cancelled").length;
+    const body=list.length?list.map(p=>row(p[0],p[1])).join("")
+      :'<div class="blank">'+(isRest(x)?"周末 · 暂无安排":"当天还没有安排")+"</div>";
+    const flag=(x==="2026-09-16"&&n>2)
+      ?'<div class="flag"><span>⚑</span><span>Quilmes 到 La Plata 单程约 60 分钟，当天 12:00–14:00 与 15:00–17:00 需留给通勤，行程较满。</span></div>':"";
+    return '<section class="day'+(isRest(x)&&!list.length?" rest":"")+'">'
+      +'<div class="dhead"><span class="ddate num">'+fmt(x)+'</span><span class="dwd">'+wd(x)+"</span>"
+      +'<span class="dnote">'+(n?n+" 场":"空档")+"</span></div>"
+      +'<div class="rows">'+body+"</div>"+flag
+      +'<div class="addrow"><button data-new="'+x+'">+ 在这一天添加行程</button></div></section>';
   }).join("");
+}
+
+function row(r,i){
+  const k=r.type==="DPP"?"k-dpp":(r.type==="内部"?"k-int":"k-oth");
+  const place=[r.addr,r.city].filter(Boolean).join(" · ");
+  return '<div class="row'+(r.status==="Cancelled"?" off":"")+'">'
+    +'<div class="cell time'+(r.time?"":" tbd")+'">'+ed(i,"time","时间待定")+"</div>"
+    +'<div class="cell"><div class="name">'+ed(i,"customer","客户名称")+"</div>"
+      +'<span class="kind '+k+'" data-kind="'+i+'" role="button" tabindex="0">'+esc(r.type||"其他")+"</span></div>"
+    +'<div class="cell people muted">'+ed(i,"people","参与人员")+"</div>"
+    +'<div class="cell place muted">'+(place?ed(i,"addr","地址待补")+(r.city?" · "+ed(i,"city"):""):ed(i,"addr","地址待补"))
+      +(r.notes?'<span class="note">'+ed(i,"notes")+"</span>":'<span class="note">'+ed(i,"notes","加个备注")+"</span>")+"</div>"
+    +'<div class="cell st-cell"><button class="st s-'+esc(r.status)+'" data-st="'+i+'">'+ZH[r.status]+"</button></div>"
+    +'<div class="cell"><button class="x" data-x="'+i+'" title="删除这条行程">×</button></div></div>';
+}
+
+function addOn(date){
+  rows.push({date:date,time:"",type:"DPP",customer:"新客户",people:"Francis Fang",status:"Pending",addr:"",city:"",notes:""});
+  save();render();
+  const els=document.querySelectorAll('[data-k="customer"]');
+  const last=els[els.length-1];
+  if(last){last.focus();document.getSelection().selectAllChildren(last)}
 }
 
 document.addEventListener("input",e=>{
   const el=e.target.closest("[contenteditable]");if(!el)return;
   rows[el.dataset.i][el.dataset.k]=el.textContent.trim();
-  clearTimeout(window.__t);window.__t=setTimeout(persist,500);
+  clearTimeout(window.__t);window.__t=setTimeout(save,400);
 });
-document.addEventListener("focusout",e=>{if(e.target.isContentEditable&&pending)setTimeout(()=>{if(pending)render()},60)});
+document.addEventListener("keydown",e=>{
+  if(e.target.isContentEditable&&e.key==="Enter"){e.preventDefault();e.target.blur()}
+  if(e.target.dataset&&e.target.dataset.kind&&(e.key==="Enter"||e.key===" ")){e.preventDefault();e.target.click()}
+});
 document.addEventListener("click",e=>{
   const s=e.target.closest("[data-st]");
-  if(s){const r=rows[s.dataset.st];r.status=STATUSES[(STATUSES.indexOf(r.status)+1)%STATUSES.length];persist();render();return}
+  if(s){const r=rows[s.dataset.st];r.status=STATUS[(STATUS.indexOf(r.status)+1)%STATUS.length];save();render();return}
+  const k=e.target.closest("[data-kind]");
+  if(k){const r=rows[k.dataset.kind];r.type=TYPES[(TYPES.indexOf(r.type)+1)%TYPES.length];save();render();return}
   const x=e.target.closest("[data-x]");
-  if(x&&confirm("删除这条行程？")){rows.splice(x.dataset.x,1);persist();render()}
+  if(x){const r=rows[x.dataset.x];if(confirm("删除「"+(r.customer||"这条行程")+"」？")){rows.splice(x.dataset.x,1);save();render()}return}
+  const n=e.target.closest("[data-new]");
+  if(n)addOn(n.dataset.new);
 });
+["q","fType","fStatus"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+document.getElementById("add").onclick=()=>{
+  const d=prompt("新增行程的日期 (YYYY-MM-DD)","2026-09-19");
+  if(d&&/^\d{4}-\d{2}-\d{2}$/.test(d))addOn(d);
+  else if(d)alert("日期格式应为 2026-09-19 这样。");
+};
+document.getElementById("reset").onclick=()=>{if(confirm("恢复到初稿内容？当前修改将全部丢失。")){rows=clone(SEED);save();render()}};
 document.getElementById("prt").onclick=()=>print();
-document.getElementById("reset").onclick=()=>{if(confirm("恢复到初稿内容？当前修改将丢失。")){rows=clone(SEED);persist();render()}};
-function csvText(){
+document.getElementById("csv").onclick=()=>{
   const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
-  const head=["Date","Weekday","Time","Type","Customer","Participants","Status","Direction","City","Notes"];
+  const head=["日期","星期","时间","类型","客户","人员","状态","地址","城市","备注"];
   const body=rows.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))
-    .map(r=>[r.date,wd(r.date),r.time,r.type,r.customer,r.people,r.status,r.addr,r.city,r.notes].map(q).join(","));
-  return "﻿"+[head.join(",")].concat(body).join("\r\n");
-}
-document.getElementById("csv").onclick=async()=>{
-  const dl=(typeof claude!=="undefined"&&claude.use)?await claude.use("downloads"):null;
-  if(dl){try{await dl.save({filename:"20260914-1002-MKT-Eason Huang.csv",data:csvText()})}catch(e){}return}
+    .map(r=>[r.date,wd(r.date),r.time,r.type,r.customer,r.people,ZH[r.status]||r.status,r.addr,r.city,r.notes].map(q).join(","));
   const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([csvText()],{type:"text/csv"}));
+  a.href=URL.createObjectURL(new Blob(["﻿"+[head.join(",")].concat(body).join("\r\n")],{type:"text/csv;charset=utf-8"}));
   a.download="20260914-1002-MKT-Eason Huang.csv";a.click();
 };
-
-try{const s=localStorage.getItem(KEY);rows=s?JSON.parse(s):clone(SEED)}catch(e){rows=clone(SEED)}
-if(!Array.isArray(rows)||!rows.length)rows=clone(SEED);
 render();
-connect().catch(()=>{});
 </script>
 </body>
 </html>
