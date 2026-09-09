@@ -1,1 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buenos Aires Visit Week</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --paper:#faf7f6;
+  --surface:#ffffff;
+  --sunk:#f2edec;
+  --ink:#1c1618;
+  --ink-2:#5c5254;
+  --ink-3:#8d8285;
+  --line:#e6dedd;
+  --line-2:#d3c9c8;
+  --accent:#c8102e;
+  --accent-soft:#fbe9ec;
+  --teal:#0b6b74;
+  --teal-soft:#e2f0f1;
+  --violet:#5b3fa8;
+  --violet-soft:#eee9fa;
+  --green:#2c7a51;
+  --amber:#a35c00;
+  --grey:#6f6669;
+  --shadow:0 1px 2px rgba(28,22,24,.06),0 8px 24px -18px rgba(28,22,24,.5);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#161214;
+    --surface:#1f1a1c;
+    --sunk:#272022;
+    --ink:#f3ecec;
+    --ink-2:#b6aaac;
+    --ink-3:#877c7e;
+    --line:#332b2d;
+    --line-2:#453b3d;
+    --accent:#ff5a70;
+    --accent-soft:#3a1c22;
+    --teal:#5fc6cf;
+    --teal-soft:#123033;
+    --violet:#b39bf5;
+    --violet-soft:#241d3a;
+    --green:#6bc294;
+    --amber:#e0a750;
+    --grey:#9c9295;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -20px #000;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#161214;
+  --surface:#1f1a1c;
+  --sunk:#272022;
+  --ink:#f3ecec;
+  --ink-2:#b6aaac;
+  --ink-3:#877c7e;
+  --line:#332b2d;
+  --line-2:#453b3d;
+  --accent:#ff5a70;
+  --accent-soft:#3a1c22;
+  --teal:#5fc6cf;
+  --teal-soft:#123033;
+  --violet:#b39bf5;
+  --violet-soft:#241d3a;
+  --green:#6bc294;
+  --amber:#e0a750;
+  --grey:#9c9295;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -20px #000;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans","Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+  font-size:15px;line-height:1.55;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,.cond{font-family:"IBM Plex Sans Condensed","IBM Plex Sans","Microsoft YaHei",sans-serif}
 
+/* ---------- masthead ---------- */
+.mast{border-bottom:1px solid var(--line);background:var(--surface)}
+.mast .in{max-width:1080px;margin:0 auto;padding:26px 24px 20px}
+.eyebrow{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{margin:6px 0 2px;font-size:30px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.dek{color:var(--ink-2);font-size:14px;max-width:62ch}
+.ref{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--ink-3)}
+.ref b{color:var(--ink-2);font-weight:500}
+
+/* ---------- stats ---------- */
+.wrap{max-width:1080px;margin:0 auto;padding:22px 24px 72px}
+.stats{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden;margin-bottom:18px}
+.stat{flex:1 1 150px;padding:12px 16px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat b{display:block;font-size:26px;font-weight:600;line-height:1.1;letter-spacing:-.02em}
+.stat span{font-size:11.5px;color:var(--ink-3);letter-spacing:.04em}
+.stat.warn b{color:var(--amber)}
+.stat.good b{color:var(--green)}
+
+/* ---------- controls ---------- */
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:22px}
+select,input,button{font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line-2);border-radius:7px;padding:6px 10px}
+button{cursor:pointer}
+button:hover{border-color:var(--ink-3)}
+button.key{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500}
+:root[data-theme="dark"] button.key,:root:not([data-theme="light"]) button.key{color:#1a0d10}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) button.key{color:#fff}}
+button.key:hover{filter:brightness(.93)}
+.grow{flex:1}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- timeline ---------- */
+.day{display:grid;grid-template-columns:112px 1fr;gap:0 22px;position:relative}
+.daymark{padding:4px 0 26px;position:relative}
+.daymark:after{content:"";position:absolute;right:-11px;top:12px;bottom:0;width:1px;background:var(--line-2)}
+.dnum{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.dmon{font-size:11.5px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase}
+.dwd{margin-top:5px;font-size:12.5px;color:var(--ink-2)}
+.dot{position:absolute;right:-15px;top:8px;width:9px;height:9px;border-radius:50%;background:var(--accent);border:2px solid var(--paper)}
+.day.free .dot{background:var(--line-2)}
+.day.free .dnum,.day.free .dmon,.day.free .dwd{color:var(--ink-3)}
+.slots{padding-bottom:26px;display:flex;flex-direction:column;gap:10px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);
+  display:grid;grid-template-columns:104px 1fr;gap:4px 16px;align-items:start}
+.card.internal{border-left:3px solid var(--violet)}
+.card.dpp{border-left:3px solid var(--teal)}
+.card.cancelled{opacity:.5}
+.when{font-size:13px;font-weight:500;color:var(--ink-2)}
+.when.tbd{color:var(--ink-3);font-style:italic}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.cust{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.chip{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;padding:2px 7px;border-radius:4px}
+.c-dpp{background:var(--teal-soft);color:var(--teal)}
+.c-int{background:var(--violet-soft);color:var(--violet)}
+.meta{grid-column:2;font-size:13px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:2px 14px}
+.meta i{font-style:normal;color:var(--ink-3)}
+.notes{grid-column:2;font-size:13px;color:var(--ink-2);border-top:1px dashed var(--line);padding-top:6px;margin-top:4px}
+.st{border:none;background:transparent;padding:0;font:inherit;font-size:11.5px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;cursor:pointer}
+.s-Confirmed{color:var(--green)} .s-Pending{color:var(--amber)} .s-Tentative{color:var(--grey)} .s-Cancelled{color:var(--accent)}
+.st:before{content:"● ";font-size:9px;vertical-align:1px}
+.x{border:none;background:transparent;color:var(--ink-3);cursor:pointer;font-size:16px;line-height:1;padding:0 2px}
+.x:hover{color:var(--accent)}
+[contenteditable]:focus{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+
+.leg{grid-column:1/-1;display:flex;gap:8px;align-items:baseline;font-size:12.5px;color:var(--amber);
+  background:var(--accent-soft);border-radius:8px;padding:7px 12px;margin-top:2px}
+:root[data-theme="dark"] .leg,:root:not([data-theme="light"]) .leg{background:var(--sunk)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .leg{background:var(--accent-soft)}}
+.blank{color:var(--ink-3);font-size:13.5px;font-style:italic;padding:8px 2px}
+
+.foot{margin-top:8px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3);max-width:70ch}
+.sync{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3)}
+.sync b{width:7px;height:7px;border-radius:50%;background:var(--ink-3);display:inline-block}
+.sync.live b{background:var(--green)}
+
+@media (max-width:640px){
+  .day{grid-template-columns:1fr;gap:0}
+  .daymark{display:flex;align-items:baseline;gap:10px;padding-bottom:10px}
+  .daymark:after,.dot{display:none}
+  .daymark{border-bottom:1px solid var(--line-2)}
+  .dwd{margin-top:0}
+  .card{grid-template-columns:1fr}
+  .meta,.notes,.leg{grid-column:1}
+}
+@media print{
+  .bar,.x,.foot{display:none!important}
+  body{background:#fff}
+  .card{box-shadow:none;break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="in">
+    <div class="eyebrow">Hikvision Argentina · Field visit</div>
+    <h1>Buenos Aires Visit Week</h1>
+    <p class="dek">Eason Huang 阿根廷渠道拜访周程。DPP 合作伙伴走访、内部沟通会与 EasyIP Workshop，覆盖 AMBA 与 La Plata 两个区域。</p>
+    <div class="ref mono">
+      <span><b>REF</b> 20260914-1002-MKT-Eason Huang</span>
+      <span><b>周期</b> 2026-09-14 → 2026-09-21</span>
+      <span><b>基地</b> Blas Parera 51, AMBA</span>
+      <span class="sync" id="sync"><b></b><span id="syncTxt">本机保存</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stats" id="stats"></div>
+
+  <div class="bar">
+    <select id="fType"></select>
+    <select id="fStatus"></select>
+    <select id="fPerson"></select>
+    <input id="fText" placeholder="搜索客户 / 地址 / 备注" style="min-width:200px">
+    <span class="grow"></span>
+    <button id="add">+ 新增</button>
+    <button id="csv">CSV</button>
+    <button id="reset">恢复初稿</button>
+    <button class="key" id="prt">打印 / PDF</button>
+  </div>
+
+  <div id="days"></div>
+
+  <p class="foot">点击任意文字即可直接修改，点击状态在 Confirmed → Pending → Tentative → Cancelled 之间循环。星期按日历自动计算。初稿中 9/16 起的星期标注有误，此处已更正。</p>
+</div>
+
+<script>
+const SEED=[
+ {id:"a1",date:"2026-09-14",time:"09:30-11:00",type:"内部",customer:"Hikvision Argentina Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",notes:"Easylink 内容讨论"},
+ {id:"a2",date:"2026-09-14",time:"11:30-12:30",type:"内部",customer:"Hikvision Argentina Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",notes:"K/Vpro + ColorVu 3.0 发布 DPP 沟通会"},
+ {id:"a3",date:"2026-09-15",time:"",type:"DPP",customer:"Guxotech",people:"Francis Fang",status:"Pending",addr:"",city:"",notes:"时间与地址待确认"},
+ {id:"a4",date:"2026-09-16",time:"10:00-12:00",type:"DPP",customer:"TS Sucursal · Quilmes",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"AMBA",notes:""},
+ {id:"a5",date:"2026-09-16",time:"14:00-15:00",type:"DPP",customer:"TS Sucursal · La Plata",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"La Plata",notes:""},
+ {id:"a6",date:"2026-09-16",time:"17:00-20:00",type:"DPP",customer:"Vesta Sistemas de Seguridad",people:"Francis Fang + Ariel Donamari",status:"Confirmed",addr:"C. 36 863, B1902 La Plata, Provincia de Buenos Aires",city:"La Plata",notes:"Workshop EasyIP"},
+ {id:"a7",date:"2026-09-17",time:"10:00-12:00",type:"DPP",customer:"Alastor",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"AMBA",notes:""},
+ {id:"a8",date:"2026-09-18",time:"",type:"内部",customer:"Hikvision Argentina Team",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"AMBA",notes:"Capacitación Interna 内部培训"},
+ {id:"a9",date:"2026-09-21",time:"",type:"内部",customer:"HUB",people:"Francis Fang",status:"Pending",addr:"",city:"",notes:"HUB 安排待定"}
+];
+const DAYS=["2026-09-14","2026-09-15","2026-09-16","2026-09-17","2026-09-18","2026-09-19","2026-09-20","2026-09-21"];
+const STATUSES=["Confirmed","Pending","Tentative","Cancelled"];
+const WD=["Dom / 周日","Lun / 周一","Mar / 周二","Mié / 周三","Jue / 周四","Vie / 周五","Sáb / 周六"];
+const MON=["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+const KEY="visit-20260914-1002-MKT-EasonHuang";
+const DOC="schedule/main";
+
+let rows=null, db=null, docRef=null, mine="";
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function d(x){return new Date(x+"T12:00:00")}
+function wd(x){return WD[d(x).getDay()]}
+function weekend(x){const g=d(x).getDay();return g===0||g===6}
+
+/* ---------- persistence ---------- */
+function localLoad(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s)}catch(e){}return null}
+function persist(){
+  const payload=clone(rows);
+  try{localStorage.setItem(KEY,JSON.stringify(payload))}catch(e){}
+  if(docRef){
+    mine=JSON.stringify(payload);
+    docRef.set({rows:payload,updatedAt:Date.now()}).catch(()=>{});
+  }
+}
+async function connect(){
+  if(typeof claude==="undefined"||!claude.use)return;
+  db=await claude.use("db");
+  if(!db)return;
+  docRef=db.doc(DOC);
+  const s=document.getElementById("sync");
+  s.classList.add("live");
+  document.getElementById("syncTxt").textContent="团队共享中";
+  docRef.onSnapshot(snap=>{
+    const body=snap.exists?snap.data():null;
+    if(!body||!Array.isArray(body.rows)){ persist(); return; }
+    const inc=JSON.stringify(body.rows);
+    if(inc===mine)return;
+    mine=inc;
+    rows=body.rows;
+    if(document.activeElement&&document.activeElement.isContentEditable){pending=true;return}
+    render();
+  },()=>{s.classList.remove("live");document.getElementById("syncTxt").textContent="本机保存"});
+}
+let pending=false;
+
+/* ---------- rendering ---------- */
+function fill(id,vals,label){
+  const el=document.getElementById(id),cur=el.value;
+  el.innerHTML='<option value="">'+label+"</option>"+vals.map(v=>"<option>"+esc(v)+"</option>").join("");
+  el.value=vals.includes(cur)?cur:"";
+}
+function match(r){
+  const t=fType.value,s=fStatus.value,p=fPerson.value,q=fText.value.trim().toLowerCase();
+  if(t&&r.type!==t)return false;
+  if(s&&r.status!==s)return false;
+  if(p&&!(r.people||"").includes(p))return false;
+  if(q&&![r.customer,r.addr,r.notes,r.city].join(" ").toLowerCase().includes(q))return false;
+  return true;
+}
+function render(){
+  pending=false;
+  fill("fType",[...new Set(rows.map(r=>r.type).filter(Boolean))].sort(),"全部类型");
+  fill("fStatus",STATUSES,"全部状态");
+  fill("fPerson",[...new Set(rows.flatMap(r=>(r.people||"").split("+").map(x=>x.trim()).filter(Boolean)))].sort(),"全部人员");
+
+  const vis=rows.filter(match), live=vis.filter(r=>r.status!=="Cancelled");
+  const busy=new Set(live.map(r=>r.date));
+  document.getElementById("stats").innerHTML=[
+    ["行程总数",live.length,""],
+    ["DPP 客户",new Set(live.filter(r=>r.type==="DPP").map(r=>r.customer)).size,""],
+    ["已确认",live.filter(r=>r.status==="Confirmed").length,"good"],
+    ["待落实",live.filter(r=>r.status==="Pending"||r.status==="Tentative").length,"warn"],
+    ["空档天数",DAYS.filter(x=>!busy.has(x)).length,""]
+  ].map(s=>'<div class="stat '+s[2]+'"><b class="mono">'+s[1]+"</b><span>"+s[0]+"</span></div>").join("");
+
+  const all=[...new Set(DAYS.concat(rows.map(r=>r.date)))].sort();
+  document.getElementById("days").innerHTML=all.map(x=>{
+    const list=vis.map(r=>[r,rows.indexOf(r)]).filter(p=>p[0].date===x);
+    const dd=d(x);
+    const cards=list.length?list.map(p=>card(p[0],p[1])).join("")
+      :'<div class="blank">'+(weekend(x)?"周末 · 无安排 / Fin de semana":"暂无安排，可点击「+ 新增」补充")+"</div>";
+    const leg=(x==="2026-09-16"&&list.length>1)
+      ?'<div class="leg"><span>⚑</span><span>Quilmes → La Plata 单程约 60 分钟。12:00–14:00 与 15:00–17:00 两段需留作通勤，当日行程较满。</span></div>':"";
+    return '<section class="day'+(list.length?"":" free")+'">'
+      +'<div class="daymark"><span class="dot"></span>'
+      +'<div class="dnum mono">'+dd.getDate()+'</div><div class="dmon mono">'+MON[dd.getMonth()]+" "+dd.getFullYear()+'</div>'
+      +'<div class="dwd">'+wd(x)+"</div></div>"
+      +'<div class="slots">'+cards+leg+"</div></section>";
+  }).join("");
+}
+function card(r,i){
+  const kind=r.type==="DPP"?"dpp":(r.type==="内部"?"internal":"");
+  const chip=r.type?'<span class="chip '+(r.type==="DPP"?"c-dpp":"c-int")+'">'+esc(r.type)+"</span>":"";
+  const ed=(k,cls,ph)=>'<span contenteditable class="'+(cls||"")+'" data-i="'+i+'" data-k="'+k+'">'+esc(r[k]||ph||"")+"</span>";
+  const bits=[];
+  bits.push("<i>人员</i> "+ed("people"));
+  bits.push("<i>地址</i> "+ed("addr","","待补充"));
+  bits.push("<i>城市</i> "+ed("city","","—"));
+  return '<article class="card '+kind+(r.status==="Cancelled"?" cancelled":"")+'">'
+    +'<div class="when mono'+(r.time?"":" tbd")+'">'+ed("time","",'时间待定')+"</div>"
+    +'<div class="head"><span class="cust">'+ed("customer")+"</span>"+chip
+    +'<button class="st s-'+esc(r.status||"Tentative")+'" data-st="'+i+'">'+esc(r.status||"Tentative")+"</button>"
+    +'<span class="grow"></span><button class="x" data-x="'+i+'" title="删除">×</button></div>'
+    +'<div class="meta">'+bits.map(b=>"<span>"+b+"</span>").join("")+"</div>"
+    +(r.notes||r.type?'<div class="notes">'+ed("notes","","备注…")+"</div>":"")
+    +"</article>";
+}
+
+/* ---------- interaction ---------- */
+document.addEventListener("input",e=>{
+  const el=e.target.closest("[contenteditable]");if(!el)return;
+  rows[el.dataset.i][el.dataset.k]=el.textContent.trim();
+  clearTimeout(window.__t);window.__t=setTimeout(persist,500);
+});
+document.addEventListener("focusout",e=>{
+  if(e.target.isContentEditable&&pending)setTimeout(()=>{if(pending)render()},50);
+});
+document.addEventListener("click",e=>{
+  const st=e.target.closest("[data-st]");
+  if(st){const r=rows[st.dataset.st];r.status=STATUSES[(STATUSES.indexOf(r.status)+1)%STATUSES.length];persist();render();return}
+  const x=e.target.closest("[data-x]");
+  if(x&&confirm("删除这条行程？")){rows.splice(x.dataset.x,1);persist();render()}
+});
+["fType","fStatus","fPerson","fText"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+document.getElementById("add").onclick=()=>{
+  const x=prompt("日期 (YYYY-MM-DD)","2026-09-19");if(!x)return;
+  rows.push({id:"n"+Date.now(),date:x,time:"",type:"DPP",customer:"新客户",people:"Francis Fang",status:"Pending",addr:"",city:"AMBA",notes:""});
+  persist();render();
+};
+document.getElementById("reset").onclick=()=>{if(confirm("恢复到初稿内容？当前修改将丢失。")){rows=clone(SEED);persist();render()}};
+document.getElementById("prt").onclick=()=>print();
+function csvText(){
+  const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
+  const head=["Date","Weekday","Time","Type","Customer","Participants","Status","Direction","City","Notes"];
+  const body=rows.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))
+    .map(r=>[r.date,wd(r.date),r.time,r.type,r.customer,r.people,r.status,r.addr,r.city,r.notes].map(q).join(","));
+  return "﻿"+[head.join(",")].concat(body).join("\r\n");
+}
+document.getElementById("csv").onclick=async()=>{
+  const btn=document.getElementById("csv");
+  const dl=(typeof claude!=="undefined"&&claude.use)?await claude.use("downloads"):null;
+  if(dl){
+    try{await dl.save({filename:"20260914-1002-MKT-Eason Huang.csv",data:csvText()})}catch(e){}
+    return;
+  }
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csvText()],{type:"text/csv"}));
+  a.download="20260914-1002-MKT-Eason Huang.csv";a.click();
+  btn.textContent="CSV";
+};
+
+rows=localLoad()||clone(SEED);
+render();
+connect().catch(()=>{});
+</script>
+</body>
+</html>
