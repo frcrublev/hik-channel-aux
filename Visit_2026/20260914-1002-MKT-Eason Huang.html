@@ -3,272 +3,197 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>拜访行程管理 · Eason Huang</title>
+<title>拜访行程日历 · Eason Huang</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap">
 <style>
 :root{
-  --ground:#f1f2f3;
-  --paper:#ffffff;
-  --raised:#f7f8f9;
-  --ink:#1f2124;
-  --ink-2:#5e6167;
-  --ink-3:#8d9096;
-  --line:#e5e7ea;
-  --line-2:#d2d5da;
-  --tint:rgba(31,33,36,.055);
-  --red:#c8102e;
-  --red-2:#a20d25;
-  --red-soft:#fbe9ec;
-  --red-mid:#f0cdd3;
-  --on-red:#ffffff;
-  --on-red-2:rgba(255,255,255,.78);
-  --amber:#8f6013;
-  --amber-soft:#f7efdf;
+  --ground:#f1f2f3; --paper:#ffffff; --raised:#f7f8f9;
+  --ink:#1f2124; --ink-2:#5e6167; --ink-3:#8d9096;
+  --line:#e5e7ea; --line-2:#d2d5da; --tint:rgba(31,33,36,.055);
+  --red:#c8102e; --red-2:#a20d25; --red-soft:#fbe9ec; --red-mid:#f0cdd3;
+  --on-red:#ffffff; --on-red-2:rgba(255,255,255,.78);
+  --amber:#8f6013; --amber-soft:#f7efdf;
   --shadow:0 1px 2px rgba(20,22,25,.05),0 10px 28px -22px rgba(20,22,25,.5);
-  --shadow-lift:0 2px 6px rgba(20,22,25,.08),0 16px 34px -22px rgba(20,22,25,.55);
+  --shadow-lift:0 4px 12px rgba(20,22,25,.1),0 24px 48px -24px rgba(20,22,25,.6);
   --ease:cubic-bezier(.22,.68,.36,1);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --ground:#151618;--paper:#1e2023;--raised:#26282c;--ink:#eceef1;--ink-2:#a8acb3;--ink-3:#7e828a;
-    --line:#31343a;--line-2:#43474e;--tint:rgba(255,255,255,.06);
-    --red:#e8455c;--red-2:#ff6b7e;--red-soft:#3a1d23;--red-mid:#54282f;
-    --on-red:#ffffff;--on-red-2:rgba(255,255,255,.78);
-    --amber:#d9a55c;--amber-soft:#332818;
+    --ground:#151618; --paper:#1e2023; --raised:#26282c;
+    --ink:#eceef1; --ink-2:#a8acb3; --ink-3:#7e828a;
+    --line:#31343a; --line-2:#43474e; --tint:rgba(255,255,255,.06);
+    --red:#e8455c; --red-2:#ff6b7e; --red-soft:#3a1d23; --red-mid:#54282f;
+    --amber:#d9a55c; --amber-soft:#332818;
     --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 30px -24px #000;
-    --shadow-lift:0 2px 8px rgba(0,0,0,.5),0 18px 38px -22px #000;
+    --shadow-lift:0 6px 18px rgba(0,0,0,.55),0 30px 60px -28px #000;
   }
 }
 :root[data-theme="dark"]{
-  --ground:#151618;--paper:#1e2023;--raised:#26282c;--ink:#eceef1;--ink-2:#a8acb3;--ink-3:#7e828a;
-  --line:#31343a;--line-2:#43474e;--tint:rgba(255,255,255,.06);
-  --red:#e8455c;--red-2:#ff6b7e;--red-soft:#3a1d23;--red-mid:#54282f;
-  --on-red:#ffffff;--on-red-2:rgba(255,255,255,.78);
-  --amber:#d9a55c;--amber-soft:#332818;
+  --ground:#151618; --paper:#1e2023; --raised:#26282c;
+  --ink:#eceef1; --ink-2:#a8acb3; --ink-3:#7e828a;
+  --line:#31343a; --line-2:#43474e; --tint:rgba(255,255,255,.06);
+  --red:#e8455c; --red-2:#ff6b7e; --red-soft:#3a1d23; --red-mid:#54282f;
+  --amber:#d9a55c; --amber-soft:#332818;
   --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 30px -24px #000;
-  --shadow-lift:0 2px 8px rgba(0,0,0,.5),0 18px 38px -22px #000;
+  --shadow-lift:0 6px 18px rgba(0,0,0,.55),0 30px 60px -28px #000;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
 body{margin:0;background:var(--ground);color:var(--ink);
-  font-family:"Source Sans 3","Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:15px;line-height:1.55}
+  font-family:"Source Sans 3","Microsoft YaHei","PingFang SC",system-ui,sans-serif;font-size:15px;line-height:1.5}
 .num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:5px}
 
-/* ---------- masthead ---------- */
-.top{background:var(--paper);border-bottom:1px solid var(--line)}
+/* ---------- banner ---------- */
 .banner{background:var(--red);color:var(--on-red)}
-.in{max-width:1320px;margin:0 auto;padding:0 26px}
-.banner .in{padding-top:14px;padding-bottom:22px}
-.idbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px}
-.idbar button{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.42);
-  color:var(--on-red);font-weight:600}
-.idbar button:hover{background:rgba(255,255,255,.28);border-color:#fff}
+.in{max-width:1400px;margin:0 auto;padding:0 24px}
+.banner .in{padding-top:14px;padding-bottom:20px}
+.idbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px}
+.idbar button{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.42);
+  color:var(--on-red);font-weight:600;border-radius:8px;padding:5px 11px;font-size:13.5px;cursor:pointer;
+  font-family:inherit;transition:background .16s var(--ease)}
+.idbar button:hover{background:rgba(255,255,255,.3)}
 .idbar button:focus-visible{outline:2px solid #fff;outline-offset:2px}
-.top .in{padding-top:14px;padding-bottom:16px}
-.titles{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 26px}
-h1{font-family:"Source Serif 4",Georgia,"Songti SC",serif;font-weight:600;font-size:26px;margin:0;letter-spacing:-.005em}
-.sub{color:var(--on-red-2);font-size:13.5px;margin-top:4px}
-.count{display:inline-flex;align-items:center;gap:7px;margin-top:11px;font-size:13px;color:var(--on-red);
+.titles{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 26px}
+h1{font-family:"Source Serif 4",Georgia,"Songti SC",serif;font-weight:600;font-size:25px;margin:0}
+.sub{color:var(--on-red-2);font-size:13px;margin-top:3px}
+.count{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:13px;
   background:rgba(255,255,255,.17);border-radius:99px;padding:3px 13px;font-weight:600}
-.count i{width:6px;height:6px;border-radius:50%;background:var(--on-red);display:inline-block;
-  animation:pulse 2.4s var(--ease) infinite}
+.count i{width:6px;height:6px;border-radius:50%;background:#fff;animation:pulse 2.4s var(--ease) infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
-
-.tally{margin-left:auto;display:flex;gap:24px}
+.tally{margin-left:auto;display:flex;gap:22px}
 .tally div{text-align:right}
-.tally b{display:block;font-size:23px;font-weight:600;line-height:1.15}
-.tally span{font-size:11.5px;color:var(--on-red-2);letter-spacing:.03em}
+.tally b{display:block;font-size:21px;font-weight:600;line-height:1.15}
+.tally span{font-size:11.5px;color:var(--on-red-2)}
 .tally .todo b{color:#ffd9a0}
 
-/* ---------- week strip ---------- */
-.strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
-.chip{flex:0 0 auto;min-width:92px;background:var(--raised);border:1px solid var(--line);border-radius:9px;
-  padding:7px 10px 8px;cursor:pointer;text-align:left;color:inherit;
-  transition:transform .18s var(--ease),border-color .18s,box-shadow .18s}
-.chip:hover{transform:translateY(-2px);border-color:var(--line-2);box-shadow:var(--shadow)}
-.chip .cd{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1;display:block}
-.chip .cw{font-size:11px;color:var(--ink-3);display:block}
-.chip .cbar{height:3px;border-radius:2px;background:var(--line);margin-top:6px;overflow:hidden;display:block}
-.chip .cbar i{display:block;height:100%;background:var(--red);border-radius:2px;width:0;transition:width .7s var(--ease)}
-.chip.rest{opacity:.66}
-.chip.free .cbar i{background:var(--line-2)}
-
 /* ---------- toolbar ---------- */
-.tools{background:var(--raised);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;
+.tools{background:var(--raised);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
   transition:box-shadow .25s var(--ease)}
 .tools.stuck{box-shadow:0 6px 18px -14px rgba(20,22,25,.55)}
-.tools .in{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:10px;padding-bottom:10px}
+.tools .in{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 24px}
 input,select,button{font:inherit;font-size:13.5px;color:var(--ink);background:var(--paper);
   border:1px solid var(--line-2);border-radius:8px;padding:5px 11px}
 input::placeholder{color:var(--ink-3)}
-button{cursor:pointer;transition:background .16s var(--ease),border-color .16s var(--ease),
-  color .16s var(--ease),transform .12s var(--ease)}
+button{cursor:pointer;transition:background .16s var(--ease),border-color .16s var(--ease),transform .12s var(--ease)}
 button:hover{border-color:var(--ink-3)}
 button:active{transform:scale(.97)}
 button.key{background:var(--red);border-color:var(--red);color:#fff;font-weight:500}
-:root[data-theme="dark"] button.key{color:#24090e}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.key{color:#24090e}}
 button.key:hover{background:var(--red-2);border-color:var(--red-2)}
-button.lang{font-weight:600;letter-spacing:.02em;border-color:var(--red-mid);color:var(--red)}
-button.lang:hover{background:var(--red-soft)}
 .grow{flex:1}
-:focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:5px}
 
-/* ---------- days ---------- */
-.wrap{max-width:1320px;margin:0 auto;padding:20px 26px 80px}
-.day{background:var(--paper);border:1px solid var(--line);border-radius:13px;margin-bottom:14px;overflow:hidden;
-  box-shadow:var(--shadow);transition:box-shadow .28s var(--ease);scroll-margin-top:64px}
-.day:hover{box-shadow:var(--shadow-lift)}
-.day.enter{opacity:0;transform:translateY(10px);animation:rise .5s var(--ease) forwards}
-@keyframes rise{to{opacity:1;transform:none}}
-.day.pinged{animation:ping 1.1s var(--ease)}
-@keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--red) 34%,transparent)}100%{box-shadow:0 0 0 13px transparent}}
+/* ---------- calendar ---------- */
+.wrap{max-width:1400px;margin:0 auto;padding:18px 24px 70px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px;font-size:12px;color:var(--ink-3)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.key-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.kd-Confirmed{background:var(--red)} .kd-Pending{background:var(--amber)}
+.kd-Tentative{background:var(--line-2)} .kd-Cancelled{background:transparent;box-shadow:inset 0 0 0 1px var(--ink-3)}
 
-.dhead{display:flex;align-items:baseline;gap:12px;padding:13px 18px;background:var(--red);
-  color:var(--on-red);border-radius:12px 12px 0 0}
-.ddate{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:18.5px}
-.dwd{font-size:13px;color:var(--on-red-2)}
-.dspan{margin-left:auto;font-size:12.5px;color:var(--on-red-2);font-variant-numeric:tabular-nums}
-.day.rest .dhead{background:var(--ink-3)}
-.day.rest .dwd,.day.rest .dspan{color:rgba(255,255,255,.8)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.wdh{background:var(--red);color:var(--on-red);font-size:12px;font-weight:600;letter-spacing:.06em;
+  text-align:center;padding:9px 4px;text-transform:uppercase}
+.wdh.we{background:var(--red-2)}
+.cell{background:var(--paper);min-height:132px;padding:8px 8px 6px;display:flex;flex-direction:column;gap:5px}
+.cell.out{background:var(--raised)}
+.cell.we{background:var(--raised)}
+.cell.today{box-shadow:inset 0 0 0 2px var(--red)}
+.cell:hover .add{opacity:1}
+.dnum{display:flex;align-items:baseline;gap:6px;font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.dnum b{font-family:"Source Serif 4",Georgia,serif;font-size:17px;color:var(--ink);font-weight:600}
+.cell.out .dnum b{color:var(--ink-3)}
+.cell.today .dnum b{color:var(--red)}
+.dnum .mo{font-size:11px;letter-spacing:.05em}
 
-.rows{padding:3px 0}
-.row,.rhead{display:grid;
-  grid-template-columns:180px minmax(170px,1.05fr) minmax(140px,.85fr) minmax(160px,1fr) minmax(190px,1.35fr) 112px 32px;
-  gap:0 16px;padding:11px 18px 11px 15px}
-.rhead{padding-top:9px;padding-bottom:9px;background:var(--raised);border-bottom:1px solid var(--line);
-  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
-.rhead .hi{color:var(--red)}
-.row{align-items:start;border-bottom:1px solid var(--line);
-  position:relative;transition:background .18s var(--ease),opacity .22s var(--ease),transform .22s var(--ease)}
-.row:before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 3px 3px 0;
-  background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .2s var(--ease)}
-.row.int:before{background:var(--ink-3)}
-.row.oth:before{background:var(--line-2)}
-.row:hover{background:var(--raised)}
-.row:focus-within{background:var(--raised)}
-.row:hover:before,.row:focus-within:before{transform:scaleX(1)}
-.row:last-child{border-bottom:none}
-.row.off{opacity:.5}
-.row.off .name{text-decoration:line-through}
-.row.fresh{animation:fresh 1.5s var(--ease)}
-@keyframes fresh{0%{background:var(--red-soft)}100%{background:transparent}}
-.day.rest .meter i{background:var(--ink-3)}
-.row.gone{opacity:0;transform:translateX(-14px)}
-.cell{min-width:0}
+.ev{display:block;width:100%;text-align:left;border:1px solid var(--line);border-left:3px solid var(--red);
+  background:var(--paper);border-radius:7px;padding:5px 8px;font-size:12.5px;line-height:1.35;
+  transition:transform .14s var(--ease),box-shadow .14s var(--ease),border-color .14s}
+.ev:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:var(--line-2)}
+.ev.internal{border-left-color:var(--ink-3)}
+.ev.ND{border-left-color:var(--amber)}
+.ev.other{border-left-color:var(--line-2)}
+.ev .tm{color:var(--ink-3);font-variant-numeric:tabular-nums;font-size:11.5px}
+.ev .nm{display:block;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev .tp{display:block;color:var(--ink-2);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:1px}
+.ev.off{opacity:.5}
+.ev.off .nm{text-decoration:line-through}
+.ev.fresh{animation:fresh 1.6s var(--ease)}
+@keyframes fresh{0%{background:var(--amber-soft)}100%{background:var(--paper)}}
+.add{margin-top:auto;border:1px dashed var(--line-2);background:none;color:var(--ink-3);border-radius:7px;
+  padding:3px 8px;font-size:12px;opacity:0;transition:opacity .16s var(--ease),color .16s,border-color .16s}
+.add:hover{color:var(--red);border-color:var(--red)}
+.warnday{font-size:11.5px;color:var(--amber);display:flex;gap:5px;line-height:1.3}
 
-/* time window */
-.win{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.win input[type=time]{width:73px;padding:2px 5px;border:1px solid transparent;background:transparent;
-  font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums;border-radius:5px;
-  transition:background .15s var(--ease),border-color .15s var(--ease)}
-.win input[type=time]:hover{background:var(--tint);border-color:var(--line-2)}
-.win input[type=time]:focus{outline:none;border-color:var(--red);background:var(--paper)}
-.win input[type=time]:invalid{color:var(--ink-3)}
-.win .dash{color:var(--ink-3)}
-.dur{display:block;font-size:11.5px;color:var(--ink-3);margin-top:3px;font-variant-numeric:tabular-nums}
-.dur.warn{color:var(--amber)}
-.meter{display:block;height:4px;border-radius:2px;background:var(--line);margin-top:5px;position:relative;overflow:hidden}
-.meter i{position:absolute;top:0;bottom:0;background:var(--red);border-radius:2px;opacity:.8;
-  transition:left .5s var(--ease),width .5s var(--ease)}
-.row.int .meter i{background:var(--ink-3)}
-
-.name{font-weight:600;font-size:15.5px;line-height:1.35}
-.topic{font-size:15.5px;font-weight:600;line-height:1.4;color:var(--ink)}
-.topic .empty{font-weight:400}
-.cell.topic-cell{border-left:2px solid var(--red-mid);padding-left:12px;margin-left:-4px}
-.row.off .cell.topic-cell{border-left-color:var(--line-2)}
-.kind{display:inline-block;margin-top:4px;font-size:11px;padding:1.5px 9px;border-radius:99px;font-weight:600;
-  letter-spacing:.03em;cursor:pointer;transition:transform .15s var(--ease),filter .15s var(--ease)}
-.kind:hover{transform:translateY(-1px)}
-.k-DPP{background:var(--red-soft);color:var(--red)}
-.k-internal{background:color-mix(in srgb,var(--ink-3) 16%,transparent);color:var(--ink-2)}
-.k-ND{background:transparent;color:var(--ink-2);border:1px solid var(--line-2)}
-.k-other{background:transparent;color:var(--ink-3);border:1px dashed var(--line-2)}
-.muted{color:var(--ink-2);font-size:13.5px}
-.pin{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-left:5px;
-  border-radius:5px;color:var(--red);text-decoration:none;vertical-align:-4px;
-  transition:background .15s var(--ease),transform .15s var(--ease)}
-.pin:hover{background:var(--red-soft);transform:translateY(-1px)}
-.pin svg{width:13px;height:13px;fill:currentColor;display:block}
-.pin.guess{color:var(--ink-3)}
-.pin.guess:hover{color:var(--red)}
-.empty{color:var(--ink-3);font-style:italic}
-.note{display:block;color:var(--ink-3);font-size:12.5px;margin-top:2px}
-.st{width:100%;text-align:left;border:1px solid transparent;background:none;font-size:12px;font-weight:600;
-  padding:2.5px 9px;border-radius:99px;transition:background .22s var(--ease),color .22s var(--ease),transform .14s var(--ease)}
-.st:hover{transform:translateY(-1px)}
-.st:before{content:"● ";font-size:9px;vertical-align:1.5px}
-.st.bump{animation:bump .32s var(--ease)}
-@keyframes bump{40%{transform:scale(1.13)}100%{transform:none}}
-.s-Confirmed{color:var(--red);background:var(--red-soft)}
-.s-Pending{color:var(--amber);background:var(--amber-soft)}
-.s-Tentative{color:var(--ink-2);background:color-mix(in srgb,var(--ink-3) 14%,transparent)}
-.s-Cancelled{color:var(--ink-3);background:transparent;border-color:var(--line-2);text-decoration:line-through}
-.x{border:none;background:none;color:var(--ink-3);font-size:17px;line-height:1;padding:2px 5px;border-radius:6px;
-  opacity:0;transform:translateX(-4px);transition:opacity .18s var(--ease),transform .18s var(--ease),color .15s}
-.row:hover .x,.x:focus-visible{opacity:1;transform:none}
-.x:hover{color:var(--red);background:var(--red-soft)}
-[contenteditable]{border-radius:5px;transition:background .16s var(--ease),box-shadow .16s var(--ease)}
-[contenteditable]:hover{background:var(--tint);box-shadow:0 0 0 3px var(--tint)}
-[contenteditable]:focus{outline:2px solid var(--red);outline-offset:2px;background:transparent;box-shadow:none}
-
-.sig{display:block;font-size:11px;color:var(--ink-3);margin-top:4px;line-height:1.3}
-.sig b{font-weight:600;color:var(--ink-2)}
-.row.touched{background:color-mix(in srgb,var(--amber) 9%,transparent)}
-.row.touched:hover{background:color-mix(in srgb,var(--amber) 14%,transparent)}
-.new-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);
-  margin-right:5px;vertical-align:1px}
-button.who{font-weight:600;border-color:var(--line-2)}
-button.who:hover{background:var(--tint)}
-.addrow{padding:9px 15px 11px}
-.addrow button{border-style:dashed;color:var(--ink-3);background:none;width:100%;text-align:left;padding:7px 11px}
-.addrow button:hover{color:var(--red);border-color:var(--red);background:var(--tint)}
-.blank{padding:15px 18px;color:var(--ink-3);font-size:13.5px}
-.flag{display:flex;gap:9px;padding:9px 18px;background:var(--red-soft);color:var(--red);font-size:13px;
-  border-top:1px solid var(--line)}
-.foot{color:var(--ink-3);font-size:12.5px;max-width:76ch;margin-top:22px;line-height:1.65}
+/* ---------- detail sheet ---------- */
+.veil{position:fixed;inset:0;background:rgba(20,22,25,.42);opacity:0;pointer-events:none;z-index:30;
+  transition:opacity .2s var(--ease)}
+.veil.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;z-index:31;right:0;top:0;bottom:0;width:min(440px,100%);background:var(--paper);
+  box-shadow:var(--shadow-lift);transform:translateX(101%);transition:transform .26s var(--ease);
+  display:flex;flex-direction:column}
+.sheet.on{transform:none}
+.shead{background:var(--red);color:var(--on-red);padding:16px 20px;display:flex;align-items:flex-start;gap:12px}
+.shead h2{margin:0;font-family:"Source Serif 4",Georgia,serif;font-size:19px;font-weight:600}
+.shead .sd{font-size:12.5px;color:var(--on-red-2);margin-top:2px}
+.shead button{margin-left:auto;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);
+  color:#fff;border-radius:7px;width:30px;height:30px;padding:0;font-size:17px;line-height:1;flex:none}
+.sbody{padding:16px 20px 22px;overflow:auto;display:flex;flex-direction:column;gap:14px}
+.fld label{display:block;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:600;margin-bottom:4px}
+.fld .val{border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-height:36px;background:var(--paper);
+  transition:border-color .15s var(--ease),background .15s}
+.fld .val:hover{background:var(--tint)}
+.fld .val:focus{outline:none;border-color:var(--red);background:var(--paper);box-shadow:0 0 0 3px var(--red-soft)}
+.fld .val.empty{color:var(--ink-3);font-style:italic}
+.fld.big .val{font-size:16px;font-weight:600}
+.win{display:flex;align-items:center;gap:8px}
+.win input[type=time]{flex:1;font-variant-numeric:tabular-nums}
+.dur{font-size:12px;color:var(--ink-3);margin-top:5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border-radius:99px;font-size:12.5px;padding:4px 12px;font-weight:600;color:var(--ink-2);
+  background:var(--paper);border:1px solid var(--line-2)}
+.chips button[aria-pressed=true]{background:var(--red);border-color:var(--red);color:#fff}
+.chips.st button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.maprow{display:flex;gap:8px;align-items:center;margin-top:7px}
+.maprow a{font-size:12.5px;color:var(--red);text-decoration:none;font-weight:600;
+  border:1px solid var(--red-mid);border-radius:7px;padding:4px 10px;transition:background .15s}
+.maprow a:hover{background:var(--red-soft)}
+.sfoot{margin-top:auto;padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;
+  background:var(--raised)}
+.sig{font-size:11.5px;color:var(--ink-3)}
+.sig b{color:var(--ink-2)}
+.del{color:var(--red);border-color:var(--red-mid);margin-left:auto}
+.del:hover{background:var(--red-soft);border-color:var(--red)}
 
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);background:var(--red);color:#fff;
-  font-size:13.5px;padding:8px 18px;border-radius:99px;opacity:0;pointer-events:none;z-index:20;
+  font-size:13.5px;padding:8px 18px;border-radius:99px;opacity:0;pointer-events:none;z-index:40;
   transition:opacity .25s var(--ease),transform .25s var(--ease);box-shadow:var(--shadow-lift)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.foot{color:var(--ink-3);font-size:12.5px;max-width:76ch;margin-top:20px;line-height:1.65}
 
-@media (max-width:1100px){
-  .rhead{display:none}
-  .row{grid-template-columns:180px 1fr 112px 32px;gap:2px 12px}
-  .row .cell.topic-cell{grid-column:2;order:2;border-left:none;padding-left:0;margin-left:0}
-  .row .cell.people{grid-column:2;order:3}
-  .row .cell.place{grid-column:2;order:4}
-  .tally{margin-left:0;width:100%;justify-content:space-between;gap:10px}
+@media (max-width:860px){
+  .cal{grid-template-columns:1fr;border-radius:10px}
+  .wdh{display:none}
+  .cell{min-height:0}
+  .cell.out{display:none}
+  .dnum{border-bottom:1px solid var(--line);padding-bottom:5px}
+  .add{opacity:1}
+  .tally{margin-left:0;width:100%;justify-content:space-between;gap:8px}
   .tally div{text-align:left}
-}
-@media (max-width:560px){
-  .in{padding-left:16px;padding-right:16px}
-  .wrap{padding-left:14px;padding-right:14px}
-  .row{grid-template-columns:1fr 30px}
-  .row .cell{grid-column:1}
-  .row .cell.st-cell{justify-self:start}
-  .st{width:auto}
-  .x{opacity:1;transform:none}
+  .sheet{width:100%}
 }
 @media print{
-  .tools,.x,.addrow,.foot,.strip,.toast,.count,.idbar,.pin{display:none!important}
+  .tools,.idbar,.add,.toast,.foot,.veil,.sheet,.legend{display:none!important}
   body{background:#fff}
-  .day{break-inside:avoid;border-color:#ccc;box-shadow:none}
-  .banner,.dhead{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .row:hover{background:none}
-  .win input[type=time]{border:none;background:none}
+  .banner,.wdh{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cal{box-shadow:none}
+  .cell{min-height:120px}
 }
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*:before,*:after{animation:none!important;transition:none!important}
-  .day.enter{opacity:1;transform:none}
-  .x{opacity:1;transform:none}
-  .row:before{transform:scaleX(1)}
-}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}
+  .add{opacity:1}}
 </style>
 </head>
 <body>
@@ -290,17 +215,12 @@ button.who:hover{background:var(--tint)}
   </div>
 </header>
 
-<div class="top">
-  <div class="in"><div class="strip" id="strip"></div></div>
-</div>
-
 <div class="tools" id="tools">
   <div class="in">
     <input id="q">
     <select id="fType"></select>
     <select id="fStatus"></select>
     <span class="grow"></span>
-    <button id="add"></button>
     <button id="send"></button>
     <button id="merge"></button>
     <button id="csv"></button>
@@ -311,104 +231,107 @@ button.who:hover{background:var(--tint)}
 </div>
 
 <div class="wrap">
-  <div id="days"></div>
+  <div class="legend" id="legend"></div>
+  <div class="cal" id="cal"></div>
   <p class="foot" id="foot"></p>
 </div>
+
+<div class="veil" id="veil"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+  <div class="shead">
+    <div>
+      <h2 id="shTitle"></h2>
+      <div class="sd" id="shDate"></div>
+    </div>
+    <button id="shClose" aria-label="close">×</button>
+  </div>
+  <div class="sbody" id="shBody"></div>
+  <div class="sfoot">
+    <span class="sig" id="shSig"></span>
+    <button class="del" id="shDel"></button>
+  </div>
+</aside>
 
 <div class="toast" id="toast"></div>
 
 <script>
-/* ---------------- 文案 / textos ---------------- */
 const T={
-  zh:{
-    title:"阿根廷拜访行程管理",
-    sub:"20260914-1002-MKT-Eason Huang · 2026/09/14 – 10/02 · AMBA、La Plata 与 CABA · 驻地 Blas Parera 51",
-    before:n=>"距出发还有 "+n+" 天", during:n=>"行程进行中 · 第 "+n+" 天", after:"行程已结束",
-    tally:["行程","DPP 客户","已确认","待落实","空档"],
-    search:"搜索客户、地址、备注", allType:"全部类型", allStatus:"全部状态",
-    add:"+ 新增行程", csv:"导出 CSV", reset:"恢复初稿", print:"打印 / PDF", lang:"Español",
-    status:{Confirmed:"已确认",Pending:"待确认",Tentative:"暂定",Cancelled:"已取消"},
-    type:{DPP:"DPP",internal:"内部",ND:"ND",other:"其他"},
-    visits:n=>n+" 场", free:"空档", restDay:"周末 · 暂无安排", noPlan:"当天还没有安排",
-    addHere:"+ 在这一天添加行程",
-    phCustomer:"客户名称", phPeople:"参与人员", phAddr:"地址待补", phNote:"补充备注", phTopic:"填写拜访主题",
-    mapTip:"在谷歌地图打开这个地址", mapGuess:n=>"地址未填，去谷歌地图搜索 "+n,
-    cols:["时间","客户名","参与人员","地址","主题","状态"],
-    dayRange:(a,b)=>"当天 "+a+" – "+b, tbd:"时间待定",
-    hrs:h=>h+" 小时", overlap:"与前一场时间重叠",
-    flag:"Quilmes 到 La Plata 单程约 60 分钟，当天 12:00–14:00 与 15:00–17:00 需留给通勤，行程较满。",
-    foot:"地址右边的红色定位图标点开就是谷歌地图；地址还没填的行，图标是灰的，点开会按客户名去搜。多人协作：第一次打开先点「设置本人」填上自己的名字，之后你改过的每条行程都会在状态下方留下名字和时间。改完点「导出变更」得到一个文件，发给同事；收到别人的文件点「导入合并」，页面会先给出新增和更新的条数让你确认，合并后被更新的行会高亮一段时间。同一条行程以最后修改时间较晚的为准。时间用左侧两个框设定起止，时长和当天时间轴会自动算。其余字段点一下即可直接改，状态点击循环切换，客户名下方的类型标签点击可切换 DPP、内部、其他。每天末尾的虚线按钮往当天加一条行程，顶部日期条可点击跳转。",
-    added:d=>d+" 已添加一条行程", removed:"已删除", csvDone:"CSV 已导出", restored:"已恢复初稿",
-    askDate:"新增行程的日期 (YYYY-MM-DD)", badDate:"日期格式应为 2026-09-19 这样。",
-    askDel:n=>"删除「"+n+"」？", thisOne:"这条行程", askReset:"恢复到初稿内容？当前修改将全部丢失。",
-    newCustomer:"新客户",
-    csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","主题","状态","地址","城市","备注","最后修改人","修改时间"],
-    send:"导出变更", merge:"导入合并", whoIs:n=>"我是 "+n, whoSet:"设置本人",
-    askWho:"请输入你的名字，用于标记你改过的行程：",
-    never:"尚未有人改动",
-    sent:"变更文件已导出，发给同事导入即可",
-    badFile:"这个文件不是本页面导出的行程文件。",
-    mergeAsk:(a,u,k)=>"导入结果预览：\n新增 "+a+" 条，更新 "+u+" 条，保持不变 "+k+" 条。\n确认合并？",
-    merged:(a,u)=>"已合并 · 新增 "+a+" 条，更新 "+u+" 条", nothing:"没有需要合并的改动",
-    touchedTip:"本次导入更新"
-  },
-  es:{
-    title:"Agenda de visitas · Argentina",
-    sub:"20260914-1002-MKT-Eason Huang · 14/09 – 02/10 de 2026 · AMBA, La Plata y CABA · Base Blas Parera 51",
-    before:n=>"Faltan "+n+" días para el inicio", during:n=>"En curso · día "+n, after:"Viaje finalizado",
-    tally:["Visitas","Socios DPP","Confirmadas","Por confirmar","Días libres"],
-    search:"Buscar cliente, dirección, nota", allType:"Todos los tipos", allStatus:"Todos los estados",
-    add:"+ Nueva visita", csv:"Exportar CSV", reset:"Restaurar original", print:"Imprimir / PDF", lang:"中文",
-    status:{Confirmed:"Confirmada",Pending:"Pendiente",Tentative:"Tentativa",Cancelled:"Cancelada"},
-    type:{DPP:"DPP",internal:"Interna",ND:"ND",other:"Otro"},
-    visits:n=>n+(n===1?" visita":" visitas"), free:"Libre", restDay:"Fin de semana · sin agenda",
-    noPlan:"Todavía sin agenda", addHere:"+ Añadir una visita este día",
-    phCustomer:"Cliente", phPeople:"Participantes", phAddr:"Dirección", phNote:"Nota adicional", phTopic:"Definir el tema",
-    mapTip:"Abrir la dirección en Google Maps", mapGuess:n=>"Sin dirección: buscar "+n+" en Google Maps",
-    cols:["Horario","Cliente","Participantes","Dirección","Tema","Estado"],
-    dayRange:(a,b)=>"Jornada "+a+" – "+b, tbd:"Horario a definir",
-    hrs:h=>h+" h", overlap:"Se superpone con la anterior",
-    flag:"De Quilmes a La Plata hay unos 60 minutos de viaje. Reservá 12:00–14:00 y 15:00–17:00 para los traslados: el día está cargado.",
-    foot:"El ícono de ubicación al lado de la dirección abre Google Maps; si todavía no hay dirección, el ícono está en gris y busca por el nombre del cliente. Trabajo en equipo: la primera vez tocá «Identificarme» y escribí tu nombre; desde ahí cada visita que edites queda firmada con tu nombre y la hora, debajo del estado. Cuando termines, tocá «Exportar cambios» y mandá el archivo; si recibís uno, tocá «Importar y combinar» y la página te muestra cuántas visitas se agregan y cuántas se actualizan antes de aplicar nada. Gana siempre la edición más reciente y las filas actualizadas quedan resaltadas un rato. El horario se define con los dos campos de hora y la duración se calcula sola. Los demás campos se editan con un clic, el estado rota al tocarlo y la etiqueta bajo el cliente alterna DPP, Interna y Otro.",
-    added:d=>"Visita agregada el "+d, removed:"Eliminada", csvDone:"CSV exportado", restored:"Original restaurado",
-    askDate:"Fecha de la nueva visita (AAAA-MM-DD)", badDate:"El formato debe ser 2026-09-19.",
-    askDel:n=>"¿Eliminar «"+n+"»?", thisOne:"esta visita", askReset:"¿Restaurar la agenda original? Se pierden los cambios.",
-    newCustomer:"Cliente nuevo",
-    csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Tema","Estado","Dirección","Ciudad","Nota","Editado por","Fecha de edición"],
-    send:"Exportar cambios", merge:"Importar y combinar", whoIs:n=>"Soy "+n, whoSet:"Identificarme",
-    askWho:"Escribí tu nombre para marcar las visitas que edites:",
-    never:"Sin ediciones todavía",
-    sent:"Archivo de cambios exportado: mandáselo a tu colega",
-    badFile:"Este archivo no es una agenda exportada desde esta página.",
-    mergeAsk:(a,u,k)=>"Vista previa:\n"+a+" nuevas, "+u+" actualizadas, "+k+" sin cambios.\n¿Combinar?",
-    merged:(a,u)=>"Combinado · "+a+" nuevas, "+u+" actualizadas", nothing:"No hay cambios para combinar",
-    touchedTip:"Actualizada en esta importación"
-  }
+ zh:{
+  title:"阿根廷拜访行程日历",
+  sub:"20260914-1002-MKT-Eason Huang · 2026/09/14 – 10/02 · AMBA、La Plata 与 CABA · 驻地 Blas Parera 51",
+  before:n=>"距出发还有 "+n+" 天", during:n=>"行程进行中 · 第 "+n+" 天", after:"行程已结束",
+  tally:["行程","DPP 客户","已确认","待落实","空档"],
+  search:"搜索客户、地址、主题", allType:"全部类型", allStatus:"全部状态",
+  send:"导出变更", merge:"导入合并", csv:"导出 CSV", reset:"恢复初稿", print:"打印 / PDF", lang:"Español",
+  whoIs:n=>"我是 "+n, whoSet:"设置本人", askWho:"请输入你的名字，用于标记你改过的行程：",
+  status:{Confirmed:"已确认",Pending:"待确认",Tentative:"暂定",Cancelled:"已取消"},
+  type:{DPP:"DPP",internal:"内部",ND:"ND",other:"其他"},
+  wd:["周一","周二","周三","周四","周五","周六","周日"],
+  add:"+ 加行程", newCustomer:"新客户", tbd:"时间待定", hrs:h=>h+" 小时",
+  fTime:"时间窗口", fCustomer:"客户名", fPeople:"参与人员", fAddr:"地址", fCity:"城市",
+  fTopic:"主题", fNote:"备注", fType:"客户类型", fStatus:"状态",
+  phCustomer:"填写客户名", phPeople:"填写参与人员", phAddr:"填写地址", phCity:"填写城市",
+  phTopic:"填写拜访主题", phNote:"补充备注",
+  map:"在谷歌地图打开", mapGuess:"按客户名搜地图",
+  never:"尚未有人改动", del:"删除", close:"关闭",
+  askDel:n=>"删除「"+n+"」？", thisOne:"这条行程", askReset:"恢复到初稿内容？当前修改将全部丢失。",
+  sent:"变更文件已导出，发给同事导入即可", badFile:"这个文件不是本页面导出的行程文件。",
+  mergeAsk:(a,u,k)=>"导入结果预览：\n新增 "+a+" 条，更新 "+u+" 条，保持不变 "+k+" 条。\n确认合并？",
+  merged:(a,u)=>"已合并 · 新增 "+a+" 条，更新 "+u+" 条", nothing:"没有需要合并的改动",
+  removed:"已删除", csvDone:"CSV 已导出", restored:"已恢复初稿",
+  clash:"当天有时间重叠",
+  foot:"点日历里的任意一条打开右侧明细，所有字段在那里改，改完自动存在本机浏览器里。鼠标移到某一天会出现「+ 加行程」。明细里有谷歌地图按钮。多人协作：先在右上角点「设置本人」填名字，你改过的每条都会留下名字和时间；改完点「导出变更」把文件发给同事，收到别人的文件点「导入合并」，合并前会先给你看新增和更新的条数，冲突时以修改时间较晚的为准。",
+  csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","主题","状态","地址","城市","备注","最后修改人","修改时间"]
+ },
+ es:{
+  title:"Calendario de visitas · Argentina",
+  sub:"20260914-1002-MKT-Eason Huang · 14/09 – 02/10 de 2026 · AMBA, La Plata y CABA · Base Blas Parera 51",
+  before:n=>"Faltan "+n+" días para el inicio", during:n=>"En curso · día "+n, after:"Viaje finalizado",
+  tally:["Visitas","Socios DPP","Confirmadas","Por confirmar","Días libres"],
+  search:"Buscar cliente, dirección, tema", allType:"Todos los tipos", allStatus:"Todos los estados",
+  send:"Exportar cambios", merge:"Importar", csv:"Exportar CSV", reset:"Restaurar original",
+  print:"Imprimir / PDF", lang:"中文",
+  whoIs:n=>"Soy "+n, whoSet:"Identificarme", askWho:"Escribí tu nombre para firmar las visitas que edites:",
+  status:{Confirmed:"Confirmada",Pending:"Pendiente",Tentative:"Tentativa",Cancelled:"Cancelada"},
+  type:{DPP:"DPP",internal:"Interna",ND:"ND",other:"Otro"},
+  wd:["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"],
+  add:"+ Visita", newCustomer:"Cliente nuevo", tbd:"Horario a definir", hrs:h=>h+" h",
+  fTime:"Horario", fCustomer:"Cliente", fPeople:"Participantes", fAddr:"Dirección", fCity:"Ciudad",
+  fTopic:"Tema", fNote:"Nota", fType:"Tipo de cliente", fStatus:"Estado",
+  phCustomer:"Nombre del cliente", phPeople:"Quiénes van", phAddr:"Dirección", phCity:"Ciudad",
+  phTopic:"Tema de la visita", phNote:"Nota adicional",
+  map:"Abrir en Google Maps", mapGuess:"Buscar el cliente en Maps",
+  never:"Sin ediciones todavía", del:"Eliminar", close:"Cerrar",
+  askDel:n=>"¿Eliminar «"+n+"»?", thisOne:"esta visita", askReset:"¿Restaurar la agenda original? Se pierden los cambios.",
+  sent:"Archivo de cambios exportado: mandáselo a tu colega",
+  badFile:"Este archivo no es una agenda exportada desde esta página.",
+  mergeAsk:(a,u,k)=>"Vista previa:\n"+a+" nuevas, "+u+" actualizadas, "+k+" sin cambios.\n¿Combinar?",
+  merged:(a,u)=>"Combinado · "+a+" nuevas, "+u+" actualizadas", nothing:"No hay cambios para combinar",
+  removed:"Eliminada", csvDone:"CSV exportado", restored:"Original restaurado",
+  clash:"Hay horarios superpuestos",
+  foot:"Tocá cualquier visita para abrir su ficha a la derecha: todos los campos se editan ahí y se guardan en este navegador. Pasando el mouse por un día aparece «+ Visita». La ficha trae un botón que abre Google Maps. Para trabajar en equipo, tocá «Identificarme» arriba a la derecha: cada visita que edites queda firmada. Al terminar, «Exportar cambios» y mandá el archivo; si recibís uno, «Importar» te muestra cuántas se agregan y cuántas se actualizan antes de aplicar. Gana la edición más reciente.",
+  csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Tema","Estado","Dirección","Ciudad","Nota","Editado por","Fecha de edición"]
+ }
 };
-const WD={
-  zh:["周日","周一","周二","周三","周四","周五","周六"],
-  es:["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"]
-};
-const SHORT={zh:["日","一","二","三","四","五","六"],es:["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"]};
 
 const SEED=[
  {date:"2026-09-14",start:"09:30",end:"11:00",type:"internal",customer:"Hik Arg Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",topic:"Easylink 内容讨论",notes:""},
  {date:"2026-09-14",start:"11:30",end:"12:30",type:"internal",customer:"Hik Arg Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",topic:"K/Vpro + ColorVu 3.0 发布 DPP 沟通会",notes:""},
  {date:"2026-09-15",start:"",end:"",type:"DPP",customer:"Guxotech",people:"Francis Fang",status:"Pending",addr:"",city:"",topic:"",notes:"地址待核实"},
- {date:"2026-09-15",start:"",end:"",type:"DPP",customer:"Ofgold",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"Arregui 6245, Versalles, CABA",city:"AMBA",topic:"",notes:""},
- {date:"2026-09-15",start:"",end:"",type:"DPP",customer:"Alastor",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"Dr. José María Casullo 229, B1708 Morón",city:"AMBA",topic:"",notes:""},
- {date:"2026-09-16",start:"10:00",end:"12:00",type:"DPP",customer:"TS Sucursal · Quilmes",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"Brasil 1130, B1882 Quilmes",city:"AMBA",topic:"",notes:""},
+ {date:"2026-09-15",start:"",end:"",type:"DPP",customer:"Ofgold",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"Arregui 6245, Versalles, CABA",city:"CABA",topic:"",notes:""},
+ {date:"2026-09-15",start:"",end:"",type:"DPP",customer:"Alastor",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"Dr. José María Casullo 229, B1708 Morón",city:"Morón",topic:"",notes:""},
+ {date:"2026-09-16",start:"10:00",end:"12:00",type:"DPP",customer:"TS Sucursal · Quilmes",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"Brasil 1130, B1882 Quilmes",city:"Quilmes",topic:"",notes:""},
  {date:"2026-09-16",start:"14:00",end:"15:00",type:"DPP",customer:"TS Sucursal · La Plata",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"La Plata",topic:"",notes:"分店地址待核实"},
  {date:"2026-09-16",start:"17:00",end:"20:00",type:"DPP",customer:"Vesta Sistemas de Seguridad",people:"Francis Fang + Ariel Donamari",status:"Confirmed",addr:"C. 36 863, B1902 La Plata, Provincia de Buenos Aires",city:"La Plata",topic:"Workshop EasyIP",notes:""},
  {date:"2026-09-17",start:"",end:"",type:"DPP",customer:"Soporte Cluster",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"",topic:"",notes:"地址待核实"},
  {date:"2026-09-17",start:"",end:"",type:"DPP",customer:"CCTV STORE",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"AMBA",topic:"",notes:"地址待核实"},
  {date:"2026-09-18",start:"",end:"",type:"DPP",customer:"Seaonline",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"",topic:"Capacitación Interna",notes:"地址待核实"},
- {date:"2026-09-18",start:"",end:"",type:"DPP",customer:"ARTEC",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"Zelada 7100, C1440 CABA",city:"AMBA",topic:"",notes:""},
+ {date:"2026-09-18",start:"",end:"",type:"DPP",customer:"ARTEC",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"Zelada 7100, C1440 CABA",city:"CABA",topic:"",notes:""},
  {date:"2026-09-21",start:"",end:"",type:"internal",customer:"Hik Arg Team",people:"Francis Fang",status:"Tentative",addr:"Blas Parera 51",city:"AMBA",topic:"内部双周会",notes:""},
- {date:"2026-09-21",start:"",end:"",type:"ND",customer:"Fiesa",people:"Francis Fang + Rodri Xu",status:"Tentative",addr:"Av. de los Incas 4154, C1427 CABA",city:"AMBA",topic:"",notes:""},
- {date:"2026-09-22",start:"",end:"",type:"DPP",customer:"Hurin",people:"Francis Fang + Diego Ripoli",status:"Tentative",addr:"Galicia 2946, 4º P, C1426 CABA",city:"AMBA",topic:"",notes:""},
- {date:"2026-09-22",start:"",end:"",type:"DPP",customer:"Teletex",people:"Francis Fang + Diego Ripoli",status:"Tentative",addr:"San Antonio 828, CABA (C1276ADL)",city:"AMBA",topic:"",notes:""},
- {date:"2026-09-22",start:"",end:"",type:"DPP",customer:"Emege",people:"Francis Fang + Diego Ripoli",status:"Tentative",addr:"Av. San Pedrito 715, C1406 CABA",city:"AMBA",topic:"",notes:""},
+ {date:"2026-09-21",start:"",end:"",type:"ND",customer:"Fiesa",people:"Francis Fang + Rodri Xu",status:"Tentative",addr:"Av. de los Incas 4154, C1427 CABA",city:"CABA",topic:"",notes:""},
+ {date:"2026-09-22",start:"",end:"",type:"DPP",customer:"Hurin",people:"Francis Fang + Diego Ripoli",status:"Tentative",addr:"Galicia 2946, 4º P, C1426 CABA",city:"CABA",topic:"",notes:""},
+ {date:"2026-09-22",start:"",end:"",type:"DPP",customer:"Teletex",people:"Francis Fang + Diego Ripoli",status:"Tentative",addr:"San Antonio 828, CABA (C1276ADL)",city:"CABA",topic:"",notes:""},
+ {date:"2026-09-22",start:"",end:"",type:"DPP",customer:"Emege",people:"Francis Fang + Diego Ripoli",status:"Tentative",addr:"Av. San Pedrito 715, C1406 CABA",city:"CABA",topic:"",notes:""},
  {date:"2026-09-23",start:"",end:"",type:"DPP",customer:"PlanetStore",people:"Francis Fang + Diego Ripoli",status:"Tentative",addr:"",city:"",topic:"",notes:"地址待核实"},
  {date:"2026-09-23",start:"",end:"",type:"DPP",customer:"GLOBALNAVET",people:"Francis Fang + Diego Ripoli",status:"Tentative",addr:"",city:"",topic:"",notes:"地址待核实"},
  {date:"2026-09-24",start:"",end:"",type:"DPP",customer:"Grupo Ser",people:"Francis Fang + Nicolás Mardaraz",status:"Tentative",addr:"",city:"",topic:"",notes:"地址待核实"},
@@ -421,55 +344,46 @@ const SEED=[
  {date:"2026-10-01",start:"",end:"",type:"ND",customer:"Hik Arg Team",people:"León Fu",status:"Tentative",addr:"",city:"",topic:"内部总结",notes:""},
  {date:"2026-10-02",start:"",end:"",type:"ND",customer:"Hik Arg Team",people:"León Fu",status:"Tentative",addr:"",city:"",topic:"内部总结",notes:""}
 ];
-const DAYS=["2026-09-14","2026-09-15","2026-09-16","2026-09-17","2026-09-18","2026-09-19","2026-09-20","2026-09-21","2026-09-22","2026-09-23","2026-09-24","2026-09-25","2026-09-26","2026-09-27","2026-09-28","2026-09-29","2026-09-30","2026-10-01","2026-10-02"];
+
+const FROM="2026-09-14", TO="2026-10-02";
 const STATUS=["Confirmed","Pending","Tentative","Cancelled"];
 const TYPES=["DPP","internal","ND","other"];
 const KEY="visit-20260914-1002-MKT-EasonHuang-v5";
-const LKEY="visit-agenda-lang";
+const LKEY="visit-agenda-lang", WKEY="visit-agenda-who";
 const CALM=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const DAY_FROM=7*60, DAY_TO=21*60;
 
 let lang=(function(){try{return localStorage.getItem(LKEY)==="es"?"es":"zh"}catch(e){return "zh"}})();
 let t=T[lang];
+let me=(function(){try{return localStorage.getItem(WKEY)||""}catch(e){return ""}})();
 
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const clone=o=>JSON.parse(JSON.stringify(o));
 const dt=x=>new Date(x+"T12:00:00");
-const wd=x=>WD[lang][dt(x).getDay()];
-const isRest=x=>[0,6].includes(dt(x).getDay());
-const fmt=x=>{const d=dt(x);return lang==="es"
-  ?String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear()
-  :d.getFullYear()+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+String(d.getDate()).padStart(2,"0")};
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const mins=s=>/^\d{2}:\d{2}$/.test(s||"")?(+s.slice(0,2))*60+(+s.slice(3)):null;
 const hrs=(a,b)=>{const x=mins(a),y=mins(b);return x!=null&&y!=null&&y>x?Math.round((y-x)/6)/10:null};
+const wdIdx=x=>(dt(x).getDay()+6)%7;
+const fmtDate=x=>{const d=dt(x);return lang==="es"
+  ?String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear()
+  :d.getFullYear()+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+String(d.getDate()).padStart(2,"0")};
+const shortAt=s=>{if(!s)return "";const d=new Date(s);if(isNaN(d))return "";
+  const p=n=>String(n).padStart(2,"0");return p(d.getMonth()+1)+"/"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes())};
 
-/* ---------------- 数据 ---------------- */
-let rows,first=true,fresh=null;
+let rows;
 try{rows=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-if(!Array.isArray(rows)||!rows.length){
-  rows=clone(SEED);
-}
-rows.forEach(r=>{
-  if(!r.uid)r.uid="r"+Math.random().toString(36).slice(2,9);
-  if(r.start===undefined){
-    const m=/^(\d{1,2}:\d{2})\s*[-–—]\s*(\d{1,2}:\d{2})$/.exec(r.time||"");
-    r.start=m?m[1].padStart(5,"0"):"";r.end=m?m[2].padStart(5,"0"):"";
-  }
-  if(r.topic===undefined){r.topic=r.notes||"";r.notes=""}
-  if(r.type==="内部")r.type="internal";
-  if(r.type==="其他"||!TYPES.includes(r.type))r.type=r.type==="DPP"?"DPP":"other";
-  delete r.time;
-});
-const WKEY="visit-agenda-who";
-let me=(function(){try{return localStorage.getItem(WKEY)||""}catch(e){return ""}})();
+if(!Array.isArray(rows)||!rows.length)rows=clone(SEED);
+rows.forEach(r=>{if(!r.uid)r.uid="r"+Math.random().toString(36).slice(2,9)});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(rows))}catch(e){}};
 const stamp=r=>{r.by=me||"?";r.at=new Date().toISOString()};
-const shortDate=iso=>{
-  if(!iso)return "";
-  const d=new Date(iso);if(isNaN(d))return "";
-  const pad=n=>String(n).padStart(2,"0");
-  return pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "+pad(d.getHours())+":"+pad(d.getMinutes());
-};
+const touched=new Set();
+let openUid=null;
+
+let toastT;
+function toast(m){
+  const el=document.getElementById("toast");
+  el.textContent=m;el.classList.add("show");
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),2000);
+}
 function askWho(){
   const n=prompt(t.askWho,me||"");
   if(n===null)return false;
@@ -479,14 +393,6 @@ function askWho(){
 }
 function paintWho(){document.getElementById("who").textContent=me?t.whoIs(me):t.whoSet}
 
-let toastT;
-function toast(msg){
-  const el=document.getElementById("toast");
-  el.textContent=msg;el.classList.add("show");
-  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),2000);
-}
-
-/* ---------------- 静态文案 ---------------- */
 function chrome(){
   document.documentElement.lang=lang==="es"?"es":"zh-CN";
   document.title=t.title+" · Eason Huang";
@@ -494,37 +400,39 @@ function chrome(){
   document.getElementById("sub").textContent=t.sub;
   document.getElementById("q").placeholder=t.search;
   document.getElementById("lang").textContent=t.lang;
-  document.getElementById("add").textContent=t.add;
   document.getElementById("send").textContent=t.send;
   document.getElementById("merge").textContent=t.merge;
   document.getElementById("csv").textContent=t.csv;
-  paintWho();
   document.getElementById("reset").textContent=t.reset;
   document.getElementById("prt").textContent=t.print;
+  document.getElementById("shDel").textContent=t.del;
+  document.getElementById("shClose").title=t.close;
   document.getElementById("foot").textContent=t.foot;
-
+  document.getElementById("legend").innerHTML=STATUS.map(s=>
+    '<span><i class="key-dot kd-'+s+'"></i>'+esc(t.status[s])+"</span>").join("");
+  paintWho();
   const today=new Date();today.setHours(12,0,0,0);
-  const s=dt(DAYS[0]),e=dt(DAYS[DAYS.length-1]),day=864e5;
+  const a=dt(FROM),b=dt(TO),day=864e5;
   document.getElementById("countTxt").textContent=
-    today<s?t.before(Math.round((s-today)/day)):(today<=e?t.during(Math.round((today-s)/day)+1):t.after);
+    today<a?t.before(Math.round((a-today)/day)):(today<=b?t.during(Math.round((today-a)/day)+1):t.after);
   document.getElementById("count").hidden=false;
 }
 
-/* ---------------- 渲染 ---------------- */
 const shown={};
-function countTo(el,to,key){
-  const from=shown[key]||0;shown[key]=to;
+function countTo(el,to,k){
+  const from=shown[k]||0;shown[k]=to;
   if(CALM||from===to){el.textContent=to;return}
   const t0=performance.now();
   (function step(now){
-    const p=Math.min(1,(now-t0)/520),k=1-Math.pow(1-p,3);
-    el.textContent=Math.round(from+(to-from)*k);
+    const p=Math.min(1,(now-t0)/500),e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(from+(to-from)*e);
     if(p<1)requestAnimationFrame(step);
   })(t0);
 }
 function fill(id,vals,label){
   const el=document.getElementById(id),cur=el.value;
-  el.innerHTML='<option value="">'+esc(label)+"</option>"+vals.map(v=>'<option value="'+esc(v[0])+'">'+esc(v[1])+"</option>").join("");
+  el.innerHTML='<option value="">'+esc(label)+"</option>"
+    +vals.map(v=>'<option value="'+esc(v[0])+'">'+esc(v[1])+"</option>").join("");
   el.value=vals.some(v=>v[0]===cur)?cur:"";
 }
 function match(r){
@@ -535,9 +443,16 @@ function match(r){
   if(q&&![r.customer,r.addr,r.city,r.topic,r.notes,r.people].join(" ").toLowerCase().includes(q))return false;
   return true;
 }
-function ed(i,k,ph){
-  const v=rows[i][k];
-  return '<span contenteditable class="'+(v?"":"empty")+'" data-i="'+i+'" data-k="'+k+'">'+esc(v||ph||"")+"</span>";
+function gridDays(){
+  const out=[];
+  const s=dt(FROM);s.setDate(s.getDate()-wdIdx(FROM));
+  const e=dt(TO);e.setDate(e.getDate()+(6-wdIdx(TO)));
+  for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push(iso(d));
+  return out;
+}
+function dayRows(x){
+  return rows.filter(r=>r.date===x)
+    .sort((a,b)=>(mins(a.start)==null?1e9:mins(a.start))-(mins(b.start)==null?1e9:mins(b.start)));
 }
 
 function render(){
@@ -545,199 +460,164 @@ function render(){
   fill("fStatus",STATUS.map(x=>[x,t.status[x]]),t.allStatus);
 
   const live=rows.filter(r=>r.status!=="Cancelled");
+  const trip=[];for(let d=dt(FROM);d<=dt(TO);d.setDate(d.getDate()+1))trip.push(iso(d));
   const busy={};live.forEach(r=>busy[r.date]=(busy[r.date]||0)+1);
-  const most=Math.max(1,...Object.values(busy));
-
   const tal=[live.length,new Set(live.filter(r=>r.type==="DPP").map(r=>r.customer)).size,
     live.filter(r=>r.status==="Confirmed").length,
     live.filter(r=>["Pending","Tentative"].includes(r.status)).length,
-    DAYS.filter(d=>!busy[d]).length];
-  const cls=["","","ok","todo",""];
+    trip.filter(d=>!busy[d]).length];
+  const cls=["","","","todo",""];
   const tEl=document.getElementById("tally");
   tEl.innerHTML=tal.map((v,i)=>'<div class="'+cls[i]+'"><b>'+(shown[i]||0)+"</b><span>"+esc(t.tally[i])+"</span></div>").join("");
   tal.forEach((v,i)=>countTo(tEl.children[i].querySelector("b"),v,i));
 
-  const strip=document.getElementById("strip");
-  strip.innerHTML=DAYS.map(x=>{
-    const d=dt(x),n=busy[x]||0;
-    return '<button class="chip'+(isRest(x)?" rest":"")+(n?"":" free")+'" data-go="'+x+'">'
-      +'<span class="cd">'+String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"</span>"
-      +'<span class="cw">'+SHORT[lang][d.getDay()]+" · "+(n?t.visits(n):t.free)+"</span>"
-      +'<span class="cbar"><i data-w="'+Math.round((n||.25)/most*100)+'"></i></span></button>';
+  const today=iso(new Date());
+  let html=t.wd.map((w,i)=>'<div class="wdh'+(i>4?" we":"")+'">'+esc(w)+"</div>").join("");
+  html+=gridDays().map(x=>{
+    const out=x<FROM||x>TO, we=wdIdx(x)>4, d=dt(x);
+    const list=dayRows(x);
+    let prev=null,clash=false;
+    const evs=list.map(r=>{
+      const s=mins(r.start);
+      if(s!=null&&prev!=null&&s<prev&&r.status!=="Cancelled")clash=true;
+      const e=mins(r.end);if(e!=null)prev=e;else if(s!=null)prev=s;
+      if(!match(r))return "";
+      const when=r.start?(r.start+(r.end?"–"+r.end:"")):t.tbd;
+      const line2=r.topic||r.city||r.people;
+      return '<button class="ev '+r.type+(r.status==="Cancelled"?" off":"")
+        +(touched.has(r.uid)?" fresh":"")+'" data-open="'+r.uid+'">'
+        +'<span class="tm"><i class="dot kd-'+r.status+'"></i>'+esc(when)+"</span>"
+        +'<span class="nm">'+esc(r.customer||t.phCustomer)+"</span>"
+        +(line2?'<span class="tp">'+esc(line2)+"</span>":"")+"</button>";
+    }).join("");
+    return '<div class="cell'+(out?" out":"")+(we?" we":"")+(x===today?" today":"")+'">'
+      +'<div class="dnum"><b>'+d.getDate()+'</b><span class="mo">'
+      +String(d.getMonth()+1).padStart(2,"0")+(lang==="es"?"":"月")+"</span></div>"
+      +evs
+      +(clash?'<div class="warnday"><span>⚑</span><span>'+esc(t.clash)+"</span></div>":"")
+      +(out?"":'<button class="add" data-new="'+x+'">'+esc(t.add)+"</button>")
+      +"</div>";
   }).join("");
-  requestAnimationFrame(()=>strip.querySelectorAll(".cbar i").forEach(i=>i.style.width=i.dataset.w+"%"));
-
-  const vis=new Set(rows.filter(match));
-  const all=[...new Set(DAYS.concat(rows.map(r=>r.date)))].sort();
-  document.getElementById("days").innerHTML=all.map((x,k)=>{
-    const list=rows.map((r,i)=>[r,i]).filter(p=>p[0].date===x&&vis.has(p[0]))
-      .sort((a,b)=>(mins(a[0].start)==null?1e9:mins(a[0].start))-(mins(b[0].start)==null?1e9:mins(b[0].start)));
-    const n=busy[x]||0;
-    const times=list.map(p=>[mins(p[0].start),mins(p[0].end)]).filter(p=>p[0]!=null);
-    const from=times.length?Math.min.apply(null,times.map(p=>p[0])):null;
-    const to=times.length?Math.max.apply(null,times.map(p=>p[1]==null?p[0]:p[1])):null;
-    let prev=null;
-    const body=list.length?list.map(p=>{
-      const html=row(p[0],p[1],prev);
-      const e=mins(p[0].end);if(e!=null)prev=e;else if(mins(p[0].start)!=null)prev=mins(p[0].start);
-      return html;
-    }).join(""):'<div class="blank">'+esc(isRest(x)?t.restDay:t.noPlan)+"</div>";
-    const span=from!=null?'<span class="dspan">'+t.dayRange(hhmm(from),hhmm(to))+"</span>"
-      :'<span class="dspan">'+esc(n?t.visits(n):t.free)+"</span>";
-    const flag=(x==="2026-09-16"&&list.length>2)?'<div class="flag"><span>⚑</span><span>'+esc(t.flag)+"</span></div>":"";
-    return '<section class="day'+(isRest(x)&&!n?" rest":"")+(first&&!CALM?" enter":"")+'" id="d'+x+'"'
-      +(first&&!CALM?' style="animation-delay:'+(k*55)+'ms"':"")+">"
-      +'<div class="dhead"><span class="ddate num">'+fmt(x)+'</span><span class="dwd">'+wd(x)+"</span>"+span+"</div>"
-      +(list.length?'<div class="rhead">'+t.cols.map((c,ci)=>'<span'+(ci===4?' class="hi"':"")+">"+esc(c)+"</span>").join("")+"<span></span></div>":"")
-      +'<div class="rows">'+body+"</div>"+flag
-      +'<div class="addrow"><button data-new="'+x+'">'+esc(t.addHere)+"</button></div></section>";
-  }).join("");
-  first=false;
-
-  if(fresh){
-    const el=document.querySelector('[data-uid="'+fresh+'"]');
-    if(el){
-      el.classList.add("fresh");
-      const inp=el.querySelector('input[type=time]');
-      if(inp)inp.focus();
-    }
-    fresh=null;
-  }
+  document.getElementById("cal").innerHTML=html;
+  if(openUid)paintSheet();
 }
-function hhmm(m){return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")}
 
-const touched=new Set();
-const PIN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
-function mapLink(r){
-  const known=(r.addr||"").trim();
-  const q=known?[known,r.city,"Argentina"].filter(Boolean).join(", ")
-               :[r.customer,r.city,"Argentina"].filter(Boolean).join(", ");
-  if(!known&&!(r.customer||"").trim())return "";
+function field(k,label,ph,big){
+  const r=rows.find(x=>x.uid===openUid), v=r[k];
+  return '<div class="fld'+(big?" big":"")+'"><label>'+esc(label)+"</label>"
+    +'<div class="val'+(v?"":" empty")+'" contenteditable data-k="'+k+'">'+esc(v||ph)+"</div></div>";
+}
+function paintSheet(){
+  const r=rows.find(x=>x.uid===openUid);
+  if(!r){closeSheet();return}
+  document.getElementById("shTitle").textContent=r.customer||t.phCustomer;
+  document.getElementById("shDate").textContent=fmtDate(r.date)+" · "+t.wd[wdIdx(r.date)];
+  const h=hrs(r.start,r.end);
+  const q=(r.addr||"").trim()?[r.addr,r.city,"Argentina"].filter(Boolean).join(", ")
+    :[r.customer,r.city,"Argentina"].filter(Boolean).join(", ");
   const href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
-  const tip=known?t.mapTip:t.mapGuess(r.customer);
-  return '<a class="pin'+(known?"":" guess")+'" href="'+href+'" target="_blank" rel="noopener noreferrer" title="'
-    +esc(tip)+'" aria-label="'+esc(tip)+'">'+PIN+"</a>";
+  document.getElementById("shBody").innerHTML=
+     '<div class="fld"><label>'+esc(t.fTime)+"</label>"
+    +'<div class="win"><input type="time" value="'+esc(r.start)+'" data-time="start">'
+    +'<span>–</span><input type="time" value="'+esc(r.end)+'" data-time="end"></div>'
+    +'<div class="dur">'+esc(h!=null?t.hrs(h):t.tbd)+"</div></div>"
+    +field("customer",t.fCustomer,t.phCustomer,true)
+    +field("topic",t.fTopic,t.phTopic,true)
+    +field("people",t.fPeople,t.phPeople)
+    +'<div class="fld"><label>'+esc(t.fAddr)+"</label>"
+    +'<div class="val'+(r.addr?"":" empty")+'" contenteditable data-k="addr">'+esc(r.addr||t.phAddr)+"</div>"
+    +'<div class="maprow"><a href="'+href+'" target="_blank" rel="noopener noreferrer">📍 '
+    +esc(r.addr?t.map:t.mapGuess)+"</a></div></div>"
+    +field("city",t.fCity,t.phCity)
+    +'<div class="fld"><label>'+esc(t.fType)+'</label><div class="chips">'
+    +TYPES.map(x=>'<button data-set-type="'+x+'" aria-pressed="'+(r.type===x)+'">'+esc(t.type[x])+"</button>").join("")
+    +"</div></div>"
+    +'<div class="fld"><label>'+esc(t.fStatus)+'</label><div class="chips st">'
+    +STATUS.map(x=>'<button data-set-status="'+x+'" aria-pressed="'+(r.status===x)+'">'+esc(t.status[x])+"</button>").join("")
+    +"</div></div>"
+    +field("notes",t.fNote,t.phNote);
+  document.getElementById("shSig").innerHTML=r.by?"<b>"+esc(r.by)+"</b> · "+esc(shortAt(r.at)):esc(t.never);
 }
-function row(r,i,prevEnd){
-  const s=mins(r.start),e=mins(r.end),h=hrs(r.start,r.end);
-  const clash=s!=null&&prevEnd!=null&&s<prevEnd;
-  let meter="";
-  if(s!=null){
-    const a=Math.max(0,Math.min(100,(s-DAY_FROM)/(DAY_TO-DAY_FROM)*100));
-    const b=Math.max(0,Math.min(100,((e!=null&&e>s?e:s+30)-DAY_FROM)/(DAY_TO-DAY_FROM)*100));
-    meter='<span class="meter"><i style="left:'+a.toFixed(1)+"%;width:"+Math.max(1.5,b-a).toFixed(1)+'%"></i></span>';
-  }
-  const dur=clash?'<span class="dur warn">'+esc(t.overlap)+"</span>"
-    :(h!=null?'<span class="dur">'+esc(t.hrs(h))+"</span>":'<span class="dur">'+esc(t.tbd)+"</span>");
-  const kindCls=r.type==="internal"?"int":(r.type==="other"?"oth":"");
-  return '<div class="row '+kindCls+(r.status==="Cancelled"?" off":"")+(touched.has(r.uid)?" touched":"")+'" data-uid="'+r.uid+'">'
-    +'<div class="cell"><span class="win">'
-      +'<input type="time" value="'+esc(r.start)+'" data-i="'+i+'" data-time="start" aria-label="inicio">'
-      +'<span class="dash">–</span>'
-      +'<input type="time" value="'+esc(r.end)+'" data-i="'+i+'" data-time="end" aria-label="fin">'
-      +"</span>"+dur+meter+"</div>"
-    +'<div class="cell"><div class="name">'+ed(i,"customer",t.phCustomer)+"</div>"
-      +'<span class="kind k-'+r.type+'" data-kind="'+i+'" role="button" tabindex="0">'+esc(t.type[r.type])+"</span></div>"
-    +'<div class="cell people muted">'+ed(i,"people",t.phPeople)+"</div>"
-    +'<div class="cell place muted">'+ed(i,"addr",t.phAddr)+(r.city?" · "+ed(i,"city"):"")+mapLink(r)+"</div>"
-    +'<div class="cell topic-cell"><div class="topic">'+ed(i,"topic",t.phTopic)+"</div>"
-      +'<span class="note">'+ed(i,"notes",t.phNote)+"</span></div>"
-    +'<div class="cell st-cell"><button class="st s-'+esc(r.status)+'" data-st="'+i+'">'+esc(t.status[r.status])+"</button>"
-      +'<span class="sig">'+(r.by?(touched.has(r.uid)?'<span class="new-dot" title="'+esc(t.touchedTip)+'"></span>':"")
-        +"<b>"+esc(r.by)+"</b> · "+esc(shortDate(r.at)):esc(t.never))+"</span></div>"
-    +'<div class="cell"><button class="x" data-x="'+i+'">×</button></div></div>';
+function openSheet(uid){
+  openUid=uid;paintSheet();
+  document.getElementById("sheet").classList.add("on");
+  document.getElementById("veil").classList.add("on");
 }
-
+function closeSheet(){
+  openUid=null;
+  document.getElementById("sheet").classList.remove("on");
+  document.getElementById("veil").classList.remove("on");
+}
 function addOn(date){
   const uid="r"+Math.random().toString(36).slice(2,9);
   const nr={uid:uid,date:date,start:"",end:"",type:"DPP",customer:t.newCustomer,
     people:me||"Francis Fang",status:"Pending",addr:"",city:"",topic:"",notes:""};
-  stamp(nr);rows.push(nr);
-  fresh=uid;save();render();
-  const sec=document.getElementById("d"+date);
-  if(sec){sec.classList.add("pinged");setTimeout(()=>sec.classList.remove("pinged"),1200)}
-  toast(t.added(fmt(date)));
+  stamp(nr);rows.push(nr);save();render();openSheet(uid);
+  const el=document.querySelector('#shBody [data-k="customer"]');
+  if(el){el.focus();getSelection().selectAllChildren(el)}
 }
 
-/* ---------------- 事件 ---------------- */
 document.addEventListener("input",e=>{
   const tm=e.target.closest("input[type=time]");
-  if(tm){
-    const r=rows[tm.dataset.i];r[tm.dataset.time]=tm.value;stamp(r);
+  if(tm&&openUid){
+    const r=rows.find(x=>x.uid===openUid);
+    r[tm.dataset.time]=tm.value;
     if(tm.dataset.time==="start"&&r.start&&!r.end){
-      const m=mins(r.start);if(m!=null)r.end=hhmm(Math.min(DAY_TO,m+60));
+      const m=mins(r.start);
+      if(m!=null)r.end=String(Math.min(21,Math.floor(m/60)+1)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
     }
+    stamp(r);
     clearTimeout(window.__t);window.__t=setTimeout(()=>{save();render()},450);
     return;
   }
-  const el=e.target.closest("[contenteditable]");if(!el)return;
-  rows[el.dataset.i][el.dataset.k]=el.textContent.trim();stamp(rows[el.dataset.i]);
-  clearTimeout(window.__t);window.__t=setTimeout(save,400);
+  const ed=e.target.closest("[contenteditable][data-k]");
+  if(ed&&openUid){
+    const r=rows.find(x=>x.uid===openUid);
+    r[ed.dataset.k]=ed.textContent.trim();stamp(r);
+    if(ed.dataset.k==="customer")document.getElementById("shTitle").textContent=r.customer||t.phCustomer;
+    clearTimeout(window.__t);window.__t=setTimeout(()=>{save();render()},450);
+  }
 });
 document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&openUid)closeSheet();
   if(e.target.isContentEditable&&e.key==="Enter"){e.preventDefault();e.target.blur()}
-  if(e.target.dataset&&e.target.dataset.kind&&(e.key==="Enter"||e.key===" ")){e.preventDefault();e.target.click()}
 });
 document.addEventListener("click",e=>{
-  const s=e.target.closest("[data-st]");
-  if(s){
-    const r=rows[s.dataset.st];
-    r.status=STATUS[(STATUS.indexOf(r.status)+1)%STATUS.length];stamp(r);
-    s.className="st s-"+r.status+" bump";s.textContent=t.status[r.status];
-    save();setTimeout(render,300);return;
-  }
-  const k=e.target.closest("[data-kind]");
-  if(k){const r=rows[k.dataset.kind];r.type=TYPES[(TYPES.indexOf(r.type)+1)%TYPES.length];stamp(r);save();render();return}
-  const x=e.target.closest("[data-x]");
-  if(x){
-    const i=+x.dataset.x,r=rows[i];
-    if(!confirm(t.askDel(r.customer||t.thisOne)))return;
-    x.closest(".row").classList.add("gone");
-    setTimeout(()=>{rows.splice(i,1);save();render();toast(t.removed)},CALM?0:220);
-    return;
-  }
+  const o=e.target.closest("[data-open]");
+  if(o){openSheet(o.dataset.open);return}
   const n=e.target.closest("[data-new]");
   if(n){addOn(n.dataset.new);return}
-  const g=e.target.closest("[data-go]");
-  if(g)document.getElementById("d"+g.dataset.go).scrollIntoView({behavior:CALM?"auto":"smooth",block:"start"});
+  const ty=e.target.closest("[data-set-type]");
+  if(ty&&openUid){const r=rows.find(x=>x.uid===openUid);r.type=ty.dataset.setType;stamp(r);save();render();return}
+  const st=e.target.closest("[data-set-status]");
+  if(st&&openUid){const r=rows.find(x=>x.uid===openUid);r.status=st.dataset.setStatus;stamp(r);save();render();return}
 });
+document.getElementById("veil").onclick=closeSheet;
+document.getElementById("shClose").onclick=closeSheet;
+document.getElementById("shDel").onclick=()=>{
+  const r=rows.find(x=>x.uid===openUid);if(!r)return;
+  if(!confirm(t.askDel(r.customer||t.thisOne)))return;
+  rows.splice(rows.indexOf(r),1);closeSheet();save();render();toast(t.removed);
+};
 ["q","fType","fStatus"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+document.getElementById("who").onclick=()=>askWho();
 document.getElementById("lang").onclick=()=>{
   lang=lang==="zh"?"es":"zh";t=T[lang];
   try{localStorage.setItem(LKEY,lang)}catch(e){}
-  chrome();render();
-  toast(lang==="es"?"Español":"中文");
-};
-document.getElementById("add").onclick=()=>{
-  const d=prompt(t.askDate,"2026-09-19");
-  if(!d)return;
-  if(/^\d{4}-\d{2}-\d{2}$/.test(d))addOn(d);else alert(t.badDate);
+  chrome();render();toast(lang==="es"?"Español":"中文");
 };
 document.getElementById("reset").onclick=()=>{
-  if(confirm(t.askReset)){
-    rows=clone(SEED);rows.forEach(r=>r.uid="r"+Math.random().toString(36).slice(2,9));
-    save();first=true;render();toast(t.restored);
-  }
+  if(!confirm(t.askReset))return;
+  rows=clone(SEED);rows.forEach(r=>r.uid="r"+Math.random().toString(36).slice(2,9));
+  touched.clear();closeSheet();save();render();toast(t.restored);
 };
 document.getElementById("prt").onclick=()=>print();
-document.getElementById("csv").onclick=()=>{
-  const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
-  const body=rows.slice().sort((a,b)=>(a.date+(a.start||"zz")).localeCompare(b.date+(b.start||"zz")))
-    .map(r=>[r.date,wd(r.date),r.start,r.end,hrs(r.start,r.end)||"",t.type[r.type],r.customer,r.people,r.topic,
-      t.status[r.status],r.addr,r.city,r.notes,r.by||"",shortDate(r.at)].map(q).join(","));
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob(["﻿"+[t.csvHead.join(",")].concat(body).join("\r\n")],{type:"text/csv;charset=utf-8"}));
-  a.download="20260914-1002-MKT-Eason Huang.csv";a.click();
-  toast(t.csvDone);
-};
-document.getElementById("who").onclick=()=>askWho();
 document.getElementById("send").onclick=()=>{
   if(!me&&!askWho())return;
-  const pack={app:"hik-visit-agenda",ref:"20260914-1002-MKT-Eason Huang",v:1,
-    by:me,at:new Date().toISOString(),rows:rows};
+  const pack={app:"hik-visit-agenda",ref:"20260914-1002-MKT-Eason Huang",v:1,by:me,at:new Date().toISOString(),rows:rows};
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([JSON.stringify(pack,null,1)],{type:"application/json"}));
-  a.download="agenda-"+(me||"edit").replace(/[^\w\u4e00-\u9fa5-]/g,"")+"-"+new Date().toISOString().slice(0,10)+".json";
+  a.download="agenda-"+(me||"edit").replace(/[^\w一-龥-]/g,"")+"-"+new Date().toISOString().slice(0,10)+".json";
   a.click();toast(t.sent);
 };
 document.getElementById("merge").onclick=()=>document.getElementById("file").click();
@@ -768,6 +648,15 @@ document.getElementById("file").onchange=e=>{
     save();render();toast(t.merged(add,upd));
   };
   fr.readAsText(f);
+};
+document.getElementById("csv").onclick=()=>{
+  const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
+  const body=rows.slice().sort((a,b)=>(a.date+(a.start||"zz")).localeCompare(b.date+(b.start||"zz")))
+    .map(r=>[r.date,t.wd[wdIdx(r.date)],r.start,r.end,hrs(r.start,r.end)||"",t.type[r.type],r.customer,
+      r.people,r.topic,t.status[r.status],r.addr,r.city,r.notes,r.by||"",shortAt(r.at)].map(q).join(","));
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob(["﻿"+[t.csvHead.join(",")].concat(body).join("\r\n")],{type:"text/csv;charset=utf-8"}));
+  a.download="20260914-1002-MKT-Eason Huang.csv";a.click();toast(t.csvDone);
 };
 addEventListener("scroll",()=>{
   document.getElementById("tools").classList.toggle("stuck",scrollY>4);
