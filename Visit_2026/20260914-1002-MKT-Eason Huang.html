@@ -151,6 +151,7 @@ button.key:hover{background:var(--red-2);border-color:var(--red-2)}
 .fld.big .val{font-size:16px;font-weight:600}
 .win{display:flex;align-items:center;gap:8px}
 .win input[type=time]{flex:1;font-variant-numeric:tabular-nums}
+.datein{width:100%;font-variant-numeric:tabular-nums;font-weight:600}
 .dur{font-size:12px;color:var(--ink-3);margin-top:5px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips button{border-radius:99px;font-size:12.5px;padding:4px 12px;font-weight:600;color:var(--ink-2);
@@ -268,7 +269,7 @@ const T={
   type:{DPP:"DPP",internal:"内部",ND:"ND",other:"其他"},
   wd:["周一","周二","周三","周四","周五","周六","周日"],
   add:"+ 加行程", newCustomer:"新客户", tbd:"时间待定", hrs:h=>h+" 小时",
-  fTime:"时间窗口", fCustomer:"客户名", fPeople:"参与人员", fAddr:"地址", fCity:"城市",
+  fDate:"日期", fTime:"时间窗口", fCustomer:"客户名", fPeople:"参与人员", fAddr:"地址", fCity:"城市",
   fTopic:"主题", fNote:"备注", fType:"客户类型", fStatus:"状态",
   phCustomer:"填写客户名", phPeople:"填写参与人员", phAddr:"填写地址", phCity:"填写城市",
   phTopic:"填写拜访主题", phNote:"补充备注",
@@ -279,8 +280,8 @@ const T={
   mergeAsk:(a,u,k)=>"导入结果预览：\n新增 "+a+" 条，更新 "+u+" 条，保持不变 "+k+" 条。\n确认合并？",
   merged:(a,u)=>"已合并 · 新增 "+a+" 条，更新 "+u+" 条", nothing:"没有需要合并的改动",
   removed:"已删除", csvDone:"CSV 已导出", restored:"已恢复初稿",
-  clash:"当天有时间重叠",
-  foot:"点日历里的任意一条打开右侧明细，所有字段在那里改，改完自动存在本机浏览器里。鼠标移到某一天会出现「+ 加行程」。明细里有谷歌地图按钮。多人协作：先在右上角点「设置本人」填名字，你改过的每条都会留下名字和时间；改完点「导出变更」把文件发给同事，收到别人的文件点「导入合并」，合并前会先给你看新增和更新的条数，冲突时以修改时间较晚的为准。",
+  clash:"当天有时间重叠", moved:d=>"已移到 "+d,
+  foot:"点日历里的任意一条打开右侧明细，日期、时间和所有字段都在那里改，改了日期这条行程会自动移到对应那天，改完自动存在本机浏览器里。鼠标移到某一天会出现「+ 加行程」。明细里有谷歌地图按钮。多人协作：先在右上角点「设置本人」填名字，你改过的每条都会留下名字和时间；改完点「导出变更」把文件发给同事，收到别人的文件点「导入合并」，合并前会先给你看新增和更新的条数，冲突时以修改时间较晚的为准。",
   csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","主题","状态","地址","备注","最后修改人","修改时间"]
  },
  es:{
@@ -296,7 +297,7 @@ const T={
   type:{DPP:"DPP",internal:"Interna",ND:"ND",other:"Otro"},
   wd:["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"],
   add:"+ Visita", newCustomer:"Cliente nuevo", tbd:"Horario a definir", hrs:h=>h+" h",
-  fTime:"Horario", fCustomer:"Cliente", fPeople:"Participantes", fAddr:"Dirección", fCity:"Ciudad",
+  fDate:"Fecha", fTime:"Horario", fCustomer:"Cliente", fPeople:"Participantes", fAddr:"Dirección", fCity:"Ciudad",
   fTopic:"Tema", fNote:"Nota", fType:"Tipo de cliente", fStatus:"Estado",
   phCustomer:"Nombre del cliente", phPeople:"Quiénes van", phAddr:"Dirección", phCity:"Ciudad",
   phTopic:"Tema de la visita", phNote:"Nota adicional",
@@ -308,8 +309,8 @@ const T={
   mergeAsk:(a,u,k)=>"Vista previa:\n"+a+" nuevas, "+u+" actualizadas, "+k+" sin cambios.\n¿Combinar?",
   merged:(a,u)=>"Combinado · "+a+" nuevas, "+u+" actualizadas", nothing:"No hay cambios para combinar",
   removed:"Eliminada", csvDone:"CSV exportado", restored:"Original restaurado",
-  clash:"Hay horarios superpuestos",
-  foot:"Tocá cualquier visita para abrir su ficha a la derecha: todos los campos se editan ahí y se guardan en este navegador. Pasando el mouse por un día aparece «+ Visita». La ficha trae un botón que abre Google Maps. Para trabajar en equipo, tocá «Identificarme» arriba a la derecha: cada visita que edites queda firmada. Al terminar, «Exportar cambios» y mandá el archivo; si recibís uno, «Importar» te muestra cuántas se agregan y cuántas se actualizan antes de aplicar. Gana la edición más reciente.",
+  clash:"Hay horarios superpuestos", moved:d=>"Movida al "+d,
+  foot:"Tocá cualquier visita para abrir su ficha a la derecha: la fecha, el horario y todos los campos se editan ahí, y al cambiar la fecha la visita se mueve sola al día que corresponde y se guardan en este navegador. Pasando el mouse por un día aparece «+ Visita». La ficha trae un botón que abre Google Maps. Para trabajar en equipo, tocá «Identificarme» arriba a la derecha: cada visita que edites queda firmada. Al terminar, «Exportar cambios» y mandá el archivo; si recibís uno, «Importar» te muestra cuántas se agregan y cuántas se actualizan antes de aplicar. Gana la edición más reciente.",
   csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Tema","Estado","Dirección","Nota","Editado por","Fecha de edición"]
  }
 };
@@ -443,10 +444,16 @@ function match(r){
   if(q&&![r.customer,r.addr,r.topic,r.notes,r.people].join(" ").toLowerCase().includes(q))return false;
   return true;
 }
+function span(){
+  const ds=rows.map(r=>r.date).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x));
+  const lo=ds.length?ds.reduce((a,b)=>a<b?a:b,FROM):FROM;
+  const hi=ds.length?ds.reduce((a,b)=>a>b?a:b,TO):TO;
+  return [lo<FROM?lo:FROM, hi>TO?hi:TO];
+}
 function gridDays(){
-  const out=[];
-  const s=dt(FROM);s.setDate(s.getDate()-wdIdx(FROM));
-  const e=dt(TO);e.setDate(e.getDate()+(6-wdIdx(TO)));
+  const [lo,hi]=span(), out=[];
+  const s=dt(lo);s.setDate(s.getDate()-wdIdx(lo));
+  const e=dt(hi);e.setDate(e.getDate()+(6-wdIdx(hi)));
   for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push(iso(d));
   return out;
 }
@@ -472,9 +479,10 @@ function render(){
   tal.forEach((v,i)=>countTo(tEl.children[i].querySelector("b"),v,i));
 
   const today=iso(new Date());
+  const [lo,hi]=span();
   let html=t.wd.map((w,i)=>'<div class="wdh'+(i>4?" we":"")+'">'+esc(w)+"</div>").join("");
   html+=gridDays().map(x=>{
-    const out=x<FROM||x>TO, we=wdIdx(x)>4, d=dt(x);
+    const out=x<lo||x>hi, we=wdIdx(x)>4, d=dt(x);
     const list=dayRows(x);
     let prev=null,clash=false;
     const evs=list.map(r=>{
@@ -519,7 +527,9 @@ function paintSheet(){
   const h=hrs(r.start,r.end);
   const href=mapHref(r);
   document.getElementById("shBody").innerHTML=
-     '<div class="fld"><label>'+esc(t.fTime)+"</label>"
+     '<div class="fld"><label>'+esc(t.fDate)+"</label>"
+    +'<input type="date" class="datein" id="shDate2" value="'+esc(r.date)+'"></div>'
+    +'<div class="fld"><label>'+esc(t.fTime)+"</label>"
     +'<div class="win"><input type="time" value="'+esc(r.start)+'" data-time="start">'
     +'<span>–</span><input type="time" value="'+esc(r.end)+'" data-time="end"></div>'
     +'<div class="dur">'+esc(h!=null?t.hrs(h):t.tbd)+"</div></div>"
@@ -569,6 +579,15 @@ function addOn(date){
 }
 
 document.addEventListener("input",e=>{
+  const dd=e.target.closest("input[type=date]");
+  if(dd&&openUid){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(dd.value))return;
+    const r=rows.find(x=>x.uid===openUid);
+    r.date=dd.value;stamp(r);save();render();
+    document.getElementById("shDate").textContent=fmtDate(r.date)+" · "+t.wd[wdIdx(r.date)];
+    paintSig();toast(t.moved(fmtDate(r.date)));
+    return;
+  }
   const tm=e.target.closest("input[type=time]");
   if(tm&&openUid){
     const r=rows.find(x=>x.uid===openUid);
