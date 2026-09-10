@@ -147,7 +147,7 @@ button.key:hover{background:var(--red-2);border-color:var(--red-2)}
   transition:border-color .15s var(--ease),background .15s}
 .fld .val:hover{background:var(--tint)}
 .fld .val:focus{outline:none;border-color:var(--red);background:var(--paper);box-shadow:0 0 0 3px var(--red-soft)}
-.fld .val.empty{color:var(--ink-3);font-style:italic}
+.fld .val:empty:before{content:attr(data-ph);color:var(--ink-3);font-style:italic;pointer-events:none}
 .fld.big .val{font-size:16px;font-weight:600}
 .win{display:flex;align-items:center;gap:8px}
 .win input[type=time]{flex:1;font-variant-numeric:tabular-nums}
@@ -281,7 +281,7 @@ const T={
   removed:"已删除", csvDone:"CSV 已导出", restored:"已恢复初稿",
   clash:"当天有时间重叠",
   foot:"点日历里的任意一条打开右侧明细，所有字段在那里改，改完自动存在本机浏览器里。鼠标移到某一天会出现「+ 加行程」。明细里有谷歌地图按钮。多人协作：先在右上角点「设置本人」填名字，你改过的每条都会留下名字和时间；改完点「导出变更」把文件发给同事，收到别人的文件点「导入合并」，合并前会先给你看新增和更新的条数，冲突时以修改时间较晚的为准。",
-  csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","主题","状态","地址","城市","备注","最后修改人","修改时间"]
+  csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","主题","状态","地址","备注","最后修改人","修改时间"]
  },
  es:{
   title:"Calendario de visitas · Argentina",
@@ -310,7 +310,7 @@ const T={
   removed:"Eliminada", csvDone:"CSV exportado", restored:"Original restaurado",
   clash:"Hay horarios superpuestos",
   foot:"Tocá cualquier visita para abrir su ficha a la derecha: todos los campos se editan ahí y se guardan en este navegador. Pasando el mouse por un día aparece «+ Visita». La ficha trae un botón que abre Google Maps. Para trabajar en equipo, tocá «Identificarme» arriba a la derecha: cada visita que edites queda firmada. Al terminar, «Exportar cambios» y mandá el archivo; si recibís uno, «Importar» te muestra cuántas se agregan y cuántas se actualizan antes de aplicar. Gana la edición más reciente.",
-  csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Tema","Estado","Dirección","Ciudad","Nota","Editado por","Fecha de edición"]
+  csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Tema","Estado","Dirección","Nota","Editado por","Fecha de edición"]
  }
 };
 
@@ -440,7 +440,7 @@ function match(r){
   const ty=document.getElementById("fType").value,st=document.getElementById("fStatus").value;
   if(ty&&r.type!==ty)return false;
   if(st&&r.status!==st)return false;
-  if(q&&![r.customer,r.addr,r.city,r.topic,r.notes,r.people].join(" ").toLowerCase().includes(q))return false;
+  if(q&&![r.customer,r.addr,r.topic,r.notes,r.people].join(" ").toLowerCase().includes(q))return false;
   return true;
 }
 function gridDays(){
@@ -483,7 +483,7 @@ function render(){
       const e=mins(r.end);if(e!=null)prev=e;else if(s!=null)prev=s;
       if(!match(r))return "";
       const when=r.start?(r.start+(r.end?"–"+r.end:"")):t.tbd;
-      const line2=r.topic||r.city||r.people;
+      const line2=r.topic||r.people;
       return '<button class="ev '+r.type+(r.status==="Cancelled"?" off":"")
         +(touched.has(r.uid)?" fresh":"")+'" data-open="'+r.uid+'">'
         +'<span class="tm"><i class="dot kd-'+r.status+'"></i>'+esc(when)+"</span>"
@@ -499,13 +499,17 @@ function render(){
       +"</div>";
   }).join("");
   document.getElementById("cal").innerHTML=html;
-  if(openUid)paintSheet();
 }
 
 function field(k,label,ph,big){
-  const r=rows.find(x=>x.uid===openUid), v=r[k];
+  const r=rows.find(x=>x.uid===openUid);
   return '<div class="fld'+(big?" big":"")+'"><label>'+esc(label)+"</label>"
-    +'<div class="val'+(v?"":" empty")+'" contenteditable data-k="'+k+'">'+esc(v||ph)+"</div></div>";
+    +'<div class="val" contenteditable data-k="'+k+'" data-ph="'+esc(ph)+'">'+esc(r[k]||"")+"</div></div>";
+}
+function mapHref(r){
+  const known=(r.addr||"").trim();
+  return "https://www.google.com/maps/search/?api=1&query="
+    +encodeURIComponent((known||r.customer||"")+", Argentina");
 }
 function paintSheet(){
   const r=rows.find(x=>x.uid===openUid);
@@ -513,9 +517,7 @@ function paintSheet(){
   document.getElementById("shTitle").textContent=r.customer||t.phCustomer;
   document.getElementById("shDate").textContent=fmtDate(r.date)+" · "+t.wd[wdIdx(r.date)];
   const h=hrs(r.start,r.end);
-  const q=(r.addr||"").trim()?[r.addr,r.city,"Argentina"].filter(Boolean).join(", ")
-    :[r.customer,r.city,"Argentina"].filter(Boolean).join(", ");
-  const href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+  const href=mapHref(r);
   document.getElementById("shBody").innerHTML=
      '<div class="fld"><label>'+esc(t.fTime)+"</label>"
     +'<div class="win"><input type="time" value="'+esc(r.start)+'" data-time="start">'
@@ -525,10 +527,9 @@ function paintSheet(){
     +field("topic",t.fTopic,t.phTopic,true)
     +field("people",t.fPeople,t.phPeople)
     +'<div class="fld"><label>'+esc(t.fAddr)+"</label>"
-    +'<div class="val'+(r.addr?"":" empty")+'" contenteditable data-k="addr">'+esc(r.addr||t.phAddr)+"</div>"
-    +'<div class="maprow"><a href="'+href+'" target="_blank" rel="noopener noreferrer">📍 '
+    +'<div class="val" contenteditable data-k="addr" data-ph="'+esc(t.phAddr)+'">'+esc(r.addr||"")+"</div>"
+    +'<div class="maprow"><a id="mapLink" href="'+href+'" target="_blank" rel="noopener noreferrer">📍 '
     +esc(r.addr?t.map:t.mapGuess)+"</a></div></div>"
-    +field("city",t.fCity,t.phCity)
     +'<div class="fld"><label>'+esc(t.fType)+'</label><div class="chips">'
     +TYPES.map(x=>'<button data-set-type="'+x+'" aria-pressed="'+(r.type===x)+'">'+esc(t.type[x])+"</button>").join("")
     +"</div></div>"
@@ -537,6 +538,16 @@ function paintSheet(){
     +"</div></div>"
     +field("notes",t.fNote,t.phNote);
   document.getElementById("shSig").innerHTML=r.by?"<b>"+esc(r.by)+"</b> · "+esc(shortAt(r.at)):esc(t.never);
+}
+function paintSig(){
+  const r=rows.find(x=>x.uid===openUid);if(!r)return;
+  const el=document.getElementById("shSig");
+  el.innerHTML=r.by?"<b>"+esc(r.by)+"</b> · "+esc(shortAt(r.at)):esc(t.never);
+}
+function paintDur(){
+  const r=rows.find(x=>x.uid===openUid);if(!r)return;
+  const el=document.querySelector("#shBody .dur");
+  if(el){const h=hrs(r.start,r.end);el.textContent=h!=null?t.hrs(h):t.tbd}
 }
 function openSheet(uid){
   openUid=uid;paintSheet();
@@ -567,15 +578,21 @@ document.addEventListener("input",e=>{
       if(m!=null)r.end=String(Math.min(21,Math.floor(m/60)+1)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
     }
     stamp(r);
-    clearTimeout(window.__t);window.__t=setTimeout(()=>{save();render()},450);
+    clearTimeout(window.__t);window.__t=setTimeout(()=>{save();render();paintSig();paintDur()},450);
     return;
   }
   const ed=e.target.closest("[contenteditable][data-k]");
   if(ed&&openUid){
     const r=rows.find(x=>x.uid===openUid);
-    r[ed.dataset.k]=ed.textContent.trim();stamp(r);
-    if(ed.dataset.k==="customer")document.getElementById("shTitle").textContent=r.customer||t.phCustomer;
-    clearTimeout(window.__t);window.__t=setTimeout(()=>{save();render()},450);
+    const v=ed.textContent.trim();
+    if(!v&&ed.innerHTML!=="")ed.innerHTML="";
+    r[ed.dataset.k]=v;stamp(r);
+    if(ed.dataset.k==="customer")document.getElementById("shTitle").textContent=v||t.phCustomer;
+    if(ed.dataset.k==="addr"||ed.dataset.k==="customer"){
+      const a=document.getElementById("mapLink");
+      if(a){a.href=mapHref(r);a.textContent="📍 "+(r.addr?t.map:t.mapGuess)}
+    }
+    clearTimeout(window.__t);window.__t=setTimeout(()=>{save();render();paintSig()},450);
   }
 });
 document.addEventListener("keydown",e=>{
@@ -588,9 +605,13 @@ document.addEventListener("click",e=>{
   const n=e.target.closest("[data-new]");
   if(n){addOn(n.dataset.new);return}
   const ty=e.target.closest("[data-set-type]");
-  if(ty&&openUid){const r=rows.find(x=>x.uid===openUid);r.type=ty.dataset.setType;stamp(r);save();render();return}
+  if(ty&&openUid){const r=rows.find(x=>x.uid===openUid);r.type=ty.dataset.setType;stamp(r);save();render();
+    ty.parentNode.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.setType===r.type));
+    paintSig();return}
   const st=e.target.closest("[data-set-status]");
-  if(st&&openUid){const r=rows.find(x=>x.uid===openUid);r.status=st.dataset.setStatus;stamp(r);save();render();return}
+  if(st&&openUid){const r=rows.find(x=>x.uid===openUid);r.status=st.dataset.setStatus;stamp(r);save();render();
+    st.parentNode.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.setStatus===r.status));
+    paintSig();return}
 });
 document.getElementById("veil").onclick=closeSheet;
 document.getElementById("shClose").onclick=closeSheet;
@@ -604,7 +625,7 @@ document.getElementById("who").onclick=()=>askWho();
 document.getElementById("lang").onclick=()=>{
   lang=lang==="zh"?"es":"zh";t=T[lang];
   try{localStorage.setItem(LKEY,lang)}catch(e){}
-  chrome();render();toast(lang==="es"?"Español":"中文");
+  chrome();render();if(openUid)paintSheet();toast(lang==="es"?"Español":"中文");
 };
 document.getElementById("reset").onclick=()=>{
   if(!confirm(t.askReset))return;
@@ -653,7 +674,7 @@ document.getElementById("csv").onclick=()=>{
   const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
   const body=rows.slice().sort((a,b)=>(a.date+(a.start||"zz")).localeCompare(b.date+(b.start||"zz")))
     .map(r=>[r.date,t.wd[wdIdx(r.date)],r.start,r.end,hrs(r.start,r.end)||"",t.type[r.type],r.customer,
-      r.people,r.topic,t.status[r.status],r.addr,r.city,r.notes,r.by||"",shortAt(r.at)].map(q).join(","));
+      r.people,r.topic,t.status[r.status],r.addr,r.notes,r.by||"",shortAt(r.at)].map(q).join(","));
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob(["﻿"+[t.csvHead.join(",")].concat(body).join("\r\n")],{type:"text/csv;charset=utf-8"}));
   a.download="20260914-1002-MKT-Eason Huang.csv";a.click();toast(t.csvDone);
