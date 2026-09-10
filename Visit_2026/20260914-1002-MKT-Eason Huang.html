@@ -188,6 +188,13 @@ button.lang:hover{background:var(--red-soft)}
 .k-ND{background:transparent;color:var(--ink-2);border:1px solid var(--line-2)}
 .k-other{background:transparent;color:var(--ink-3);border:1px dashed var(--line-2)}
 .muted{color:var(--ink-2);font-size:13.5px}
+.pin{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-left:5px;
+  border-radius:5px;color:var(--red);text-decoration:none;vertical-align:-4px;
+  transition:background .15s var(--ease),transform .15s var(--ease)}
+.pin:hover{background:var(--red-soft);transform:translateY(-1px)}
+.pin svg{width:13px;height:13px;fill:currentColor;display:block}
+.pin.guess{color:var(--ink-3)}
+.pin.guess:hover{color:var(--red)}
 .empty{color:var(--ink-3);font-style:italic}
 .note{display:block;color:var(--ink-3);font-size:12.5px;margin-top:2px}
 .st{width:100%;text-align:left;border:1px solid transparent;background:none;font-size:12px;font-weight:600;
@@ -248,7 +255,7 @@ button.who:hover{background:var(--tint)}
   .x{opacity:1;transform:none}
 }
 @media print{
-  .tools,.x,.addrow,.foot,.strip,.toast,.count,.idbar{display:none!important}
+  .tools,.x,.addrow,.foot,.strip,.toast,.count,.idbar,.pin{display:none!important}
   body{background:#fff}
   .day{break-inside:avoid;border-color:#ccc;box-shadow:none}
   .banner,.dhead{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -325,11 +332,12 @@ const T={
     visits:n=>n+" 场", free:"空档", restDay:"周末 · 暂无安排", noPlan:"当天还没有安排",
     addHere:"+ 在这一天添加行程",
     phCustomer:"客户名称", phPeople:"参与人员", phAddr:"地址待补", phNote:"补充备注", phTopic:"填写拜访主题",
+    mapTip:"在谷歌地图打开这个地址", mapGuess:n=>"地址未填，去谷歌地图搜索 "+n,
     cols:["时间","客户名","参与人员","地址","主题","状态"],
     dayRange:(a,b)=>"当天 "+a+" – "+b, tbd:"时间待定",
     hrs:h=>h+" 小时", overlap:"与前一场时间重叠",
     flag:"Quilmes 到 La Plata 单程约 60 分钟，当天 12:00–14:00 与 15:00–17:00 需留给通勤，行程较满。",
-    foot:"多人协作：第一次打开先点「设置本人」填上自己的名字，之后你改过的每条行程都会在状态下方留下名字和时间。改完点「导出变更」得到一个文件，发给同事；收到别人的文件点「导入合并」，页面会先给出新增和更新的条数让你确认，合并后被更新的行会高亮一段时间。同一条行程以最后修改时间较晚的为准。时间用左侧两个框设定起止，时长和当天时间轴会自动算。其余字段点一下即可直接改，状态点击循环切换，客户名下方的类型标签点击可切换 DPP、内部、其他。每天末尾的虚线按钮往当天加一条行程，顶部日期条可点击跳转。",
+    foot:"地址右边的红色定位图标点开就是谷歌地图；地址还没填的行，图标是灰的，点开会按客户名去搜。多人协作：第一次打开先点「设置本人」填上自己的名字，之后你改过的每条行程都会在状态下方留下名字和时间。改完点「导出变更」得到一个文件，发给同事；收到别人的文件点「导入合并」，页面会先给出新增和更新的条数让你确认，合并后被更新的行会高亮一段时间。同一条行程以最后修改时间较晚的为准。时间用左侧两个框设定起止，时长和当天时间轴会自动算。其余字段点一下即可直接改，状态点击循环切换，客户名下方的类型标签点击可切换 DPP、内部、其他。每天末尾的虚线按钮往当天加一条行程，顶部日期条可点击跳转。",
     added:d=>d+" 已添加一条行程", removed:"已删除", csvDone:"CSV 已导出", restored:"已恢复初稿",
     askDate:"新增行程的日期 (YYYY-MM-DD)", badDate:"日期格式应为 2026-09-19 这样。",
     askDel:n=>"删除「"+n+"」？", thisOne:"这条行程", askReset:"恢复到初稿内容？当前修改将全部丢失。",
@@ -356,11 +364,12 @@ const T={
     visits:n=>n+(n===1?" visita":" visitas"), free:"Libre", restDay:"Fin de semana · sin agenda",
     noPlan:"Todavía sin agenda", addHere:"+ Añadir una visita este día",
     phCustomer:"Cliente", phPeople:"Participantes", phAddr:"Dirección", phNote:"Nota adicional", phTopic:"Definir el tema",
+    mapTip:"Abrir la dirección en Google Maps", mapGuess:n=>"Sin dirección: buscar "+n+" en Google Maps",
     cols:["Horario","Cliente","Participantes","Dirección","Tema","Estado"],
     dayRange:(a,b)=>"Jornada "+a+" – "+b, tbd:"Horario a definir",
     hrs:h=>h+" h", overlap:"Se superpone con la anterior",
     flag:"De Quilmes a La Plata hay unos 60 minutos de viaje. Reservá 12:00–14:00 y 15:00–17:00 para los traslados: el día está cargado.",
-    foot:"Trabajo en equipo: la primera vez tocá «Identificarme» y escribí tu nombre; desde ahí cada visita que edites queda firmada con tu nombre y la hora, debajo del estado. Cuando termines, tocá «Exportar cambios» y mandá el archivo; si recibís uno, tocá «Importar y combinar» y la página te muestra cuántas visitas se agregan y cuántas se actualizan antes de aplicar nada. Gana siempre la edición más reciente y las filas actualizadas quedan resaltadas un rato. El horario se define con los dos campos de hora y la duración se calcula sola. Los demás campos se editan con un clic, el estado rota al tocarlo y la etiqueta bajo el cliente alterna DPP, Interna y Otro.",
+    foot:"El ícono de ubicación al lado de la dirección abre Google Maps; si todavía no hay dirección, el ícono está en gris y busca por el nombre del cliente. Trabajo en equipo: la primera vez tocá «Identificarme» y escribí tu nombre; desde ahí cada visita que edites queda firmada con tu nombre y la hora, debajo del estado. Cuando termines, tocá «Exportar cambios» y mandá el archivo; si recibís uno, tocá «Importar y combinar» y la página te muestra cuántas visitas se agregan y cuántas se actualizan antes de aplicar nada. Gana siempre la edición más reciente y las filas actualizadas quedan resaltadas un rato. El horario se define con los dos campos de hora y la duración se calcula sola. Los demás campos se editan con un clic, el estado rota al tocarlo y la etiqueta bajo el cliente alterna DPP, Interna y Otro.",
     added:d=>"Visita agregada el "+d, removed:"Eliminada", csvDone:"CSV exportado", restored:"Original restaurado",
     askDate:"Fecha de la nueva visita (AAAA-MM-DD)", badDate:"El formato debe ser 2026-09-19.",
     askDel:n=>"¿Eliminar «"+n+"»?", thisOne:"esta visita", askReset:"¿Restaurar la agenda original? Se pierden los cambios.",
@@ -598,6 +607,17 @@ function render(){
 function hhmm(m){return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")}
 
 const touched=new Set();
+const PIN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
+function mapLink(r){
+  const known=(r.addr||"").trim();
+  const q=known?[known,r.city,"Argentina"].filter(Boolean).join(", ")
+               :[r.customer,r.city,"Argentina"].filter(Boolean).join(", ");
+  if(!known&&!(r.customer||"").trim())return "";
+  const href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+  const tip=known?t.mapTip:t.mapGuess(r.customer);
+  return '<a class="pin'+(known?"":" guess")+'" href="'+href+'" target="_blank" rel="noopener noreferrer" title="'
+    +esc(tip)+'" aria-label="'+esc(tip)+'">'+PIN+"</a>";
+}
 function row(r,i,prevEnd){
   const s=mins(r.start),e=mins(r.end),h=hrs(r.start,r.end);
   const clash=s!=null&&prevEnd!=null&&s<prevEnd;
@@ -619,7 +639,7 @@ function row(r,i,prevEnd){
     +'<div class="cell"><div class="name">'+ed(i,"customer",t.phCustomer)+"</div>"
       +'<span class="kind k-'+r.type+'" data-kind="'+i+'" role="button" tabindex="0">'+esc(t.type[r.type])+"</span></div>"
     +'<div class="cell people muted">'+ed(i,"people",t.phPeople)+"</div>"
-    +'<div class="cell place muted">'+ed(i,"addr",t.phAddr)+(r.city?" · "+ed(i,"city"):"")+"</div>"
+    +'<div class="cell place muted">'+ed(i,"addr",t.phAddr)+(r.city?" · "+ed(i,"city"):"")+mapLink(r)+"</div>"
     +'<div class="cell topic-cell"><div class="topic">'+ed(i,"topic",t.phTopic)+"</div>"
       +'<span class="note">'+ed(i,"notes",t.phNote)+"</span></div>"
     +'<div class="cell st-cell"><button class="st s-'+esc(r.status)+'" data-st="'+i+'">'+esc(t.status[r.status])+"</button>"
