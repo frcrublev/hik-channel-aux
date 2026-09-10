@@ -60,7 +60,12 @@ body{margin:0;background:var(--ground);color:var(--ink);
 .top{background:var(--paper);border-bottom:1px solid var(--line)}
 .banner{background:var(--red);color:var(--on-red)}
 .in{max-width:1180px;margin:0 auto;padding:0 26px}
-.banner .in{padding-top:26px;padding-bottom:22px}
+.banner .in{padding-top:14px;padding-bottom:22px}
+.idbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px}
+.idbar button{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.42);
+  color:var(--on-red);font-weight:600}
+.idbar button:hover{background:rgba(255,255,255,.28);border-color:#fff}
+.idbar button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .top .in{padding-top:14px;padding-bottom:16px}
 .titles{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 26px}
 h1{font-family:"Source Serif 4",Georgia,"Songti SC",serif;font-weight:600;font-size:26px;margin:0;letter-spacing:-.005em}
@@ -231,7 +236,7 @@ button.who:hover{background:var(--tint)}
   .x{opacity:1;transform:none}
 }
 @media print{
-  .tools,.x,.addrow,.foot,.strip,.toast,.count{display:none!important}
+  .tools,.x,.addrow,.foot,.strip,.toast,.count,.idbar{display:none!important}
   body{background:#fff}
   .day{break-inside:avoid;border-color:#ccc;box-shadow:none}
   .banner,.dhead{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -251,6 +256,10 @@ button.who:hover{background:var(--tint)}
 
 <header class="banner">
   <div class="in">
+    <div class="idbar">
+      <button class="who" id="who"></button>
+      <button class="lang" id="lang"></button>
+    </div>
     <div class="titles">
       <div>
         <h1 id="h1"></h1>
@@ -272,8 +281,6 @@ button.who:hover{background:var(--tint)}
     <select id="fType"></select>
     <select id="fStatus"></select>
     <span class="grow"></span>
-    <button class="who" id="who"></button>
-    <button class="lang" id="lang"></button>
     <button id="add"></button>
     <button id="send"></button>
     <button id="merge"></button>
