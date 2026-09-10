@@ -59,7 +59,7 @@ body{margin:0;background:var(--ground);color:var(--ink);
 /* ---------- masthead ---------- */
 .top{background:var(--paper);border-bottom:1px solid var(--line)}
 .banner{background:var(--red);color:var(--on-red)}
-.in{max-width:1180px;margin:0 auto;padding:0 26px}
+.in{max-width:1320px;margin:0 auto;padding:0 26px}
 .banner .in{padding-top:14px;padding-bottom:22px}
 .idbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px}
 .idbar button{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.42);
@@ -117,7 +117,7 @@ button.lang:hover{background:var(--red-soft)}
 :focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:5px}
 
 /* ---------- days ---------- */
-.wrap{max-width:1180px;margin:0 auto;padding:20px 26px 80px}
+.wrap{max-width:1320px;margin:0 auto;padding:20px 26px 80px}
 .day{background:var(--paper);border:1px solid var(--line);border-radius:13px;margin-bottom:14px;overflow:hidden;
   box-shadow:var(--shadow);transition:box-shadow .28s var(--ease);scroll-margin-top:64px}
 .day:hover{box-shadow:var(--shadow-lift)}
@@ -135,8 +135,13 @@ button.lang:hover{background:var(--red-soft)}
 .day.rest .dwd,.day.rest .dspan{color:rgba(255,255,255,.8)}
 
 .rows{padding:3px 0}
-.row{display:grid;grid-template-columns:186px minmax(190px,1.2fr) minmax(150px,.95fr) minmax(180px,1.2fr) 112px 32px;
-  gap:0 16px;align-items:start;padding:11px 18px 11px 15px;border-bottom:1px solid var(--line);
+.row,.rhead{display:grid;
+  grid-template-columns:180px minmax(170px,1.05fr) minmax(140px,.85fr) minmax(160px,1fr) minmax(190px,1.35fr) 112px 32px;
+  gap:0 16px;padding:11px 18px 11px 15px}
+.rhead{padding-top:9px;padding-bottom:9px;background:var(--raised);border-bottom:1px solid var(--line);
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.rhead .hi{color:var(--red)}
+.row{align-items:start;border-bottom:1px solid var(--line);
   position:relative;transition:background .18s var(--ease),opacity .22s var(--ease),transform .22s var(--ease)}
 .row:before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 3px 3px 0;
   background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .2s var(--ease)}
@@ -171,6 +176,10 @@ button.lang:hover{background:var(--red-soft)}
 .row.int .meter i{background:var(--ink-3)}
 
 .name{font-weight:600;font-size:15.5px;line-height:1.35}
+.topic{font-size:15.5px;font-weight:600;line-height:1.4;color:var(--ink)}
+.topic .empty{font-weight:400}
+.cell.topic-cell{border-left:2px solid var(--red-mid);padding-left:12px;margin-left:-4px}
+.row.off .cell.topic-cell{border-left-color:var(--line-2)}
 .kind{display:inline-block;margin-top:4px;font-size:11px;padding:1.5px 9px;border-radius:99px;font-weight:600;
   letter-spacing:.03em;cursor:pointer;transition:transform .15s var(--ease),filter .15s var(--ease)}
 .kind:hover{transform:translateY(-1px)}
@@ -219,8 +228,10 @@ button.who:hover{background:var(--tint)}
   transition:opacity .25s var(--ease),transform .25s var(--ease);box-shadow:var(--shadow-lift)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-@media (max-width:980px){
-  .row{grid-template-columns:180px 1fr 108px 28px;gap:2px 12px}
+@media (max-width:1100px){
+  .rhead{display:none}
+  .row{grid-template-columns:180px 1fr 112px 32px;gap:2px 12px}
+  .row .cell.topic-cell{grid-column:2;order:2;border-left:none;padding-left:0;margin-left:0}
   .row .cell.people{grid-column:2;order:3}
   .row .cell.place{grid-column:2;order:4}
   .tally{margin-left:0;width:100%;justify-content:space-between;gap:10px}
@@ -312,7 +323,8 @@ const T={
     type:{DPP:"DPP",internal:"内部",other:"其他"},
     visits:n=>n+" 场", free:"空档", restDay:"周末 · 暂无安排", noPlan:"当天还没有安排",
     addHere:"+ 在这一天添加行程",
-    phCustomer:"客户名称", phPeople:"参与人员", phAddr:"地址待补", phNote:"加个备注",
+    phCustomer:"客户名称", phPeople:"参与人员", phAddr:"地址待补", phNote:"补充备注", phTopic:"填写拜访主题",
+    cols:["时间","客户名","参与人员","地址","主题","状态"],
     dayRange:(a,b)=>"当天 "+a+" – "+b, tbd:"时间待定",
     hrs:h=>h+" 小时", overlap:"与前一场时间重叠",
     flag:"Quilmes 到 La Plata 单程约 60 分钟，当天 12:00–14:00 与 15:00–17:00 需留给通勤，行程较满。",
@@ -321,7 +333,7 @@ const T={
     askDate:"新增行程的日期 (YYYY-MM-DD)", badDate:"日期格式应为 2026-09-19 这样。",
     askDel:n=>"删除「"+n+"」？", thisOne:"这条行程", askReset:"恢复到初稿内容？当前修改将全部丢失。",
     newCustomer:"新客户",
-    csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","状态","地址","城市","备注","最后修改人","修改时间"],
+    csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","主题","状态","地址","城市","备注","最后修改人","修改时间"],
     send:"导出变更", merge:"导入合并", whoIs:n=>"我是 "+n, whoSet:"设置本人",
     askWho:"请输入你的名字，用于标记你改过的行程：",
     never:"尚未有人改动",
@@ -342,7 +354,8 @@ const T={
     type:{DPP:"DPP",internal:"Interna",other:"Otro"},
     visits:n=>n+(n===1?" visita":" visitas"), free:"Libre", restDay:"Fin de semana · sin agenda",
     noPlan:"Todavía sin agenda", addHere:"+ Añadir una visita este día",
-    phCustomer:"Cliente", phPeople:"Participantes", phAddr:"Dirección", phNote:"Nota",
+    phCustomer:"Cliente", phPeople:"Participantes", phAddr:"Dirección", phNote:"Nota adicional", phTopic:"Definir el tema",
+    cols:["Horario","Cliente","Participantes","Dirección","Tema","Estado"],
     dayRange:(a,b)=>"Jornada "+a+" – "+b, tbd:"Horario a definir",
     hrs:h=>h+" h", overlap:"Se superpone con la anterior",
     flag:"De Quilmes a La Plata hay unos 60 minutos de viaje. Reservá 12:00–14:00 y 15:00–17:00 para los traslados: el día está cargado.",
@@ -351,7 +364,7 @@ const T={
     askDate:"Fecha de la nueva visita (AAAA-MM-DD)", badDate:"El formato debe ser 2026-09-19.",
     askDel:n=>"¿Eliminar «"+n+"»?", thisOne:"esta visita", askReset:"¿Restaurar la agenda original? Se pierden los cambios.",
     newCustomer:"Cliente nuevo",
-    csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Estado","Dirección","Ciudad","Nota","Editado por","Fecha de edición"],
+    csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Tema","Estado","Dirección","Ciudad","Nota","Editado por","Fecha de edición"],
     send:"Exportar cambios", merge:"Importar y combinar", whoIs:n=>"Soy "+n, whoSet:"Identificarme",
     askWho:"Escribí tu nombre para marcar las visitas que edites:",
     never:"Sin ediciones todavía",
@@ -369,15 +382,15 @@ const WD={
 const SHORT={zh:["日","一","二","三","四","五","六"],es:["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"]};
 
 const SEED=[
- {date:"2026-09-14",start:"09:30",end:"11:00",type:"internal",customer:"Hikvision Argentina Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",notes:"Easylink"},
- {date:"2026-09-14",start:"11:30",end:"12:30",type:"internal",customer:"Hikvision Argentina Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",notes:"K/Vpro + ColorVu 3.0 · DPP"},
- {date:"2026-09-15",start:"",end:"",type:"DPP",customer:"Guxotech",people:"Francis Fang",status:"Pending",addr:"",city:"",notes:"A confirmar"},
+ {date:"2026-09-14",start:"09:30",end:"11:00",type:"internal",customer:"Hikvision Argentina Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",topic:"Easylink 内容讨论",notes:""},
+ {date:"2026-09-14",start:"11:30",end:"12:30",type:"internal",customer:"Hikvision Argentina Team",people:"Cristian Oreja + Francis Fang",status:"Confirmed",addr:"Blas Parera 51",city:"AMBA",topic:"K/Vpro + ColorVu 3.0 发布 DPP 沟通会",notes:""},
+ {date:"2026-09-15",start:"",end:"",type:"DPP",customer:"Guxotech",people:"Francis Fang",status:"Pending",addr:"",city:"",topic:"",notes:"时间与地址待确认"},
  {date:"2026-09-16",start:"10:00",end:"12:00",type:"DPP",customer:"TS Sucursal · Quilmes",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"AMBA",notes:""},
  {date:"2026-09-16",start:"14:00",end:"15:00",type:"DPP",customer:"TS Sucursal · La Plata",people:"Francis Fang + Ariel Donamari",status:"Tentative",addr:"",city:"La Plata",notes:""},
- {date:"2026-09-16",start:"17:00",end:"20:00",type:"DPP",customer:"Vesta Sistemas de Seguridad",people:"Francis Fang + Ariel Donamari",status:"Confirmed",addr:"C. 36 863, B1902 La Plata",city:"La Plata",notes:"Workshop EasyIP"},
+ {date:"2026-09-16",start:"17:00",end:"20:00",type:"DPP",customer:"Vesta Sistemas de Seguridad",people:"Francis Fang + Ariel Donamari",status:"Confirmed",addr:"C. 36 863, B1902 La Plata",city:"La Plata",topic:"Workshop EasyIP",notes:""},
  {date:"2026-09-17",start:"10:00",end:"12:00",type:"DPP",customer:"Alastor",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"AMBA",notes:""},
- {date:"2026-09-18",start:"",end:"",type:"internal",customer:"Capacitación Interna",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"AMBA",notes:""},
- {date:"2026-09-21",start:"",end:"",type:"internal",customer:"HUB",people:"Francis Fang",status:"Pending",addr:"",city:"",notes:""}
+ {date:"2026-09-18",start:"",end:"",type:"internal",customer:"Capacitación Interna",people:"Francis Fang + Key Sepulveda",status:"Tentative",addr:"",city:"AMBA",topic:"Capacitación Interna",notes:""},
+ {date:"2026-09-21",start:"",end:"",type:"internal",customer:"HUB",people:"Francis Fang",status:"Pending",addr:"",city:"",topic:"HUB",notes:""}
 ];
 const DAYS=["2026-09-14","2026-09-15","2026-09-16","2026-09-17","2026-09-18","2026-09-19","2026-09-20","2026-09-21"];
 const STATUS=["Confirmed","Pending","Tentative","Cancelled"];
@@ -414,6 +427,7 @@ rows.forEach(r=>{
     const m=/^(\d{1,2}:\d{2})\s*[-–—]\s*(\d{1,2}:\d{2})$/.exec(r.time||"");
     r.start=m?m[1].padStart(5,"0"):"";r.end=m?m[2].padStart(5,"0"):"";
   }
+  if(r.topic===undefined){r.topic=r.notes||"";r.notes=""}
   if(r.type==="内部")r.type="internal";
   if(r.type==="其他"||!TYPES.includes(r.type))r.type=r.type==="DPP"?"DPP":"other";
   delete r.time;
@@ -490,7 +504,7 @@ function match(r){
   const ty=document.getElementById("fType").value,st=document.getElementById("fStatus").value;
   if(ty&&r.type!==ty)return false;
   if(st&&r.status!==st)return false;
-  if(q&&![r.customer,r.addr,r.city,r.notes,r.people].join(" ").toLowerCase().includes(q))return false;
+  if(q&&![r.customer,r.addr,r.city,r.topic,r.notes,r.people].join(" ").toLowerCase().includes(q))return false;
   return true;
 }
 function ed(i,k,ph){
@@ -546,6 +560,7 @@ function render(){
     return '<section class="day'+(isRest(x)&&!n?" rest":"")+(first&&!CALM?" enter":"")+'" id="d'+x+'"'
       +(first&&!CALM?' style="animation-delay:'+(k*55)+'ms"':"")+">"
       +'<div class="dhead"><span class="ddate num">'+fmt(x)+'</span><span class="dwd">'+wd(x)+"</span>"+span+"</div>"
+      +(list.length?'<div class="rhead">'+t.cols.map((c,ci)=>'<span'+(ci===4?' class="hi"':"")+">"+esc(c)+"</span>").join("")+"<span></span></div>":"")
       +'<div class="rows">'+body+"</div>"+flag
       +'<div class="addrow"><button data-new="'+x+'">'+esc(t.addHere)+"</button></div></section>";
   }).join("");
@@ -585,7 +600,8 @@ function row(r,i,prevEnd){
     +'<div class="cell"><div class="name">'+ed(i,"customer",t.phCustomer)+"</div>"
       +'<span class="kind k-'+r.type+'" data-kind="'+i+'" role="button" tabindex="0">'+esc(t.type[r.type])+"</span></div>"
     +'<div class="cell people muted">'+ed(i,"people",t.phPeople)+"</div>"
-    +'<div class="cell place muted">'+ed(i,"addr",t.phAddr)+(r.city?" · "+ed(i,"city"):"")
+    +'<div class="cell place muted">'+ed(i,"addr",t.phAddr)+(r.city?" · "+ed(i,"city"):"")+"</div>"
+    +'<div class="cell topic-cell"><div class="topic">'+ed(i,"topic",t.phTopic)+"</div>"
       +'<span class="note">'+ed(i,"notes",t.phNote)+"</span></div>"
     +'<div class="cell st-cell"><button class="st s-'+esc(r.status)+'" data-st="'+i+'">'+esc(t.status[r.status])+"</button>"
       +'<span class="sig">'+(r.by?(touched.has(r.uid)?'<span class="new-dot" title="'+esc(t.touchedTip)+'"></span>':"")
@@ -596,7 +612,7 @@ function row(r,i,prevEnd){
 function addOn(date){
   const uid="r"+Math.random().toString(36).slice(2,9);
   const nr={uid:uid,date:date,start:"",end:"",type:"DPP",customer:t.newCustomer,
-    people:me||"Francis Fang",status:"Pending",addr:"",city:"",notes:""};
+    people:me||"Francis Fang",status:"Pending",addr:"",city:"",topic:"",notes:""};
   stamp(nr);rows.push(nr);
   fresh=uid;save();render();
   const sec=document.getElementById("d"+date);
@@ -668,7 +684,7 @@ document.getElementById("prt").onclick=()=>print();
 document.getElementById("csv").onclick=()=>{
   const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
   const body=rows.slice().sort((a,b)=>(a.date+(a.start||"zz")).localeCompare(b.date+(b.start||"zz")))
-    .map(r=>[r.date,wd(r.date),r.start,r.end,hrs(r.start,r.end)||"",t.type[r.type],r.customer,r.people,
+    .map(r=>[r.date,wd(r.date),r.start,r.end,hrs(r.start,r.end)||"",t.type[r.type],r.customer,r.people,r.topic,
       t.status[r.status],r.addr,r.city,r.notes,r.by||"",shortDate(r.at)].map(q).join(","));
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob(["﻿"+[t.csvHead.join(",")].concat(body).join("\r\n")],{type:"text/csv;charset=utf-8"}));
