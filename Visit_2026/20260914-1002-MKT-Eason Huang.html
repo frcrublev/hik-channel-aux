@@ -193,6 +193,14 @@ button.lang:hover{background:var(--red-soft)}
 [contenteditable]:hover{background:var(--tint);box-shadow:0 0 0 3px var(--tint)}
 [contenteditable]:focus{outline:2px solid var(--red);outline-offset:2px;background:transparent;box-shadow:none}
 
+.sig{display:block;font-size:11px;color:var(--ink-3);margin-top:4px;line-height:1.3}
+.sig b{font-weight:600;color:var(--ink-2)}
+.row.touched{background:color-mix(in srgb,var(--amber) 9%,transparent)}
+.row.touched:hover{background:color-mix(in srgb,var(--amber) 14%,transparent)}
+.new-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);
+  margin-right:5px;vertical-align:1px}
+button.who{font-weight:600;border-color:var(--line-2)}
+button.who:hover{background:var(--tint)}
 .addrow{padding:9px 15px 11px}
 .addrow button{border-style:dashed;color:var(--ink-3);background:none;width:100%;text-align:left;padding:7px 11px}
 .addrow button:hover{color:var(--red);border-color:var(--red);background:var(--tint)}
@@ -264,11 +272,15 @@ button.lang:hover{background:var(--red-soft)}
     <select id="fType"></select>
     <select id="fStatus"></select>
     <span class="grow"></span>
+    <button class="who" id="who"></button>
     <button class="lang" id="lang"></button>
     <button id="add"></button>
+    <button id="send"></button>
+    <button id="merge"></button>
     <button id="csv"></button>
     <button id="reset"></button>
     <button class="key" id="prt"></button>
+    <input type="file" id="file" accept="application/json,.json" hidden>
   </div>
 </div>
 
@@ -297,12 +309,20 @@ const T={
     dayRange:(a,b)=>"当天 "+a+" – "+b, tbd:"时间待定",
     hrs:h=>h+" 小时", overlap:"与前一场时间重叠",
     flag:"Quilmes 到 La Plata 单程约 60 分钟，当天 12:00–14:00 与 15:00–17:00 需留给通勤，行程较满。",
-    foot:"时间用左侧两个时间框设定起止，系统会自动算出时长并在当天排出时间轴。其余字段点一下即可直接改，改完自动保存在本机浏览器里。状态点击循环切换，客户名下方的类型标签点击可切换 DPP、内部、其他。每天末尾的虚线按钮往当天加一条行程，顶部日期条可点击跳转。星期按日历自动计算，初稿中 9/16 起的星期标注已更正。",
+    foot:"多人协作：第一次打开先点「设置本人」填上自己的名字，之后你改过的每条行程都会在状态下方留下名字和时间。改完点「导出变更」得到一个文件，发给同事；收到别人的文件点「导入合并」，页面会先给出新增和更新的条数让你确认，合并后被更新的行会高亮一段时间。同一条行程以最后修改时间较晚的为准。时间用左侧两个框设定起止，时长和当天时间轴会自动算。其余字段点一下即可直接改，状态点击循环切换，客户名下方的类型标签点击可切换 DPP、内部、其他。每天末尾的虚线按钮往当天加一条行程，顶部日期条可点击跳转。",
     added:d=>d+" 已添加一条行程", removed:"已删除", csvDone:"CSV 已导出", restored:"已恢复初稿",
     askDate:"新增行程的日期 (YYYY-MM-DD)", badDate:"日期格式应为 2026-09-19 这样。",
     askDel:n=>"删除「"+n+"」？", thisOne:"这条行程", askReset:"恢复到初稿内容？当前修改将全部丢失。",
     newCustomer:"新客户",
-    csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","状态","地址","城市","备注"]
+    csvHead:["日期","星期","开始","结束","时长","类型","客户","人员","状态","地址","城市","备注","最后修改人","修改时间"],
+    send:"导出变更", merge:"导入合并", whoIs:n=>"我是 "+n, whoSet:"设置本人",
+    askWho:"请输入你的名字，用于标记你改过的行程：",
+    never:"尚未有人改动",
+    sent:"变更文件已导出，发给同事导入即可",
+    badFile:"这个文件不是本页面导出的行程文件。",
+    mergeAsk:(a,u,k)=>"导入结果预览：\n新增 "+a+" 条，更新 "+u+" 条，保持不变 "+k+" 条。\n确认合并？",
+    merged:(a,u)=>"已合并 · 新增 "+a+" 条，更新 "+u+" 条", nothing:"没有需要合并的改动",
+    touchedTip:"本次导入更新"
   },
   es:{
     title:"Agenda de visitas · Argentina",
@@ -319,12 +339,20 @@ const T={
     dayRange:(a,b)=>"Jornada "+a+" – "+b, tbd:"Horario a definir",
     hrs:h=>h+" h", overlap:"Se superpone con la anterior",
     flag:"De Quilmes a La Plata hay unos 60 minutos de viaje. Reservá 12:00–14:00 y 15:00–17:00 para los traslados: el día está cargado.",
-    foot:"El horario se define con los dos campos de hora; la duración y la línea de tiempo del día se calculan solas. Los demás campos se editan con un clic y se guardan en este navegador. El estado rota al hacer clic, y la etiqueta bajo el cliente alterna DPP, Interna y Otro. El botón punteado agrega una visita a ese día y la barra de fechas de arriba lleva directo a cada jornada.",
+    foot:"Trabajo en equipo: la primera vez tocá «Identificarme» y escribí tu nombre; desde ahí cada visita que edites queda firmada con tu nombre y la hora, debajo del estado. Cuando termines, tocá «Exportar cambios» y mandá el archivo; si recibís uno, tocá «Importar y combinar» y la página te muestra cuántas visitas se agregan y cuántas se actualizan antes de aplicar nada. Gana siempre la edición más reciente y las filas actualizadas quedan resaltadas un rato. El horario se define con los dos campos de hora y la duración se calcula sola. Los demás campos se editan con un clic, el estado rota al tocarlo y la etiqueta bajo el cliente alterna DPP, Interna y Otro.",
     added:d=>"Visita agregada el "+d, removed:"Eliminada", csvDone:"CSV exportado", restored:"Original restaurado",
     askDate:"Fecha de la nueva visita (AAAA-MM-DD)", badDate:"El formato debe ser 2026-09-19.",
     askDel:n=>"¿Eliminar «"+n+"»?", thisOne:"esta visita", askReset:"¿Restaurar la agenda original? Se pierden los cambios.",
     newCustomer:"Cliente nuevo",
-    csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Estado","Dirección","Ciudad","Nota"]
+    csvHead:["Fecha","Día","Inicio","Fin","Duración","Tipo","Cliente","Participantes","Estado","Dirección","Ciudad","Nota","Editado por","Fecha de edición"],
+    send:"Exportar cambios", merge:"Importar y combinar", whoIs:n=>"Soy "+n, whoSet:"Identificarme",
+    askWho:"Escribí tu nombre para marcar las visitas que edites:",
+    never:"Sin ediciones todavía",
+    sent:"Archivo de cambios exportado: mandáselo a tu colega",
+    badFile:"Este archivo no es una agenda exportada desde esta página.",
+    mergeAsk:(a,u,k)=>"Vista previa:\n"+a+" nuevas, "+u+" actualizadas, "+k+" sin cambios.\n¿Combinar?",
+    merged:(a,u)=>"Combinado · "+a+" nuevas, "+u+" actualizadas", nothing:"No hay cambios para combinar",
+    touchedTip:"Actualizada en esta importación"
   }
 };
 const WD={
@@ -383,7 +411,24 @@ rows.forEach(r=>{
   if(r.type==="其他"||!TYPES.includes(r.type))r.type=r.type==="DPP"?"DPP":"other";
   delete r.time;
 });
+const WKEY=KEY+"-who";
+let me=(function(){try{return localStorage.getItem(WKEY)||""}catch(e){return ""}})();
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(rows))}catch(e){}};
+const stamp=r=>{r.by=me||"?";r.at=new Date().toISOString()};
+const shortDate=iso=>{
+  if(!iso)return "";
+  const d=new Date(iso);if(isNaN(d))return "";
+  const pad=n=>String(n).padStart(2,"0");
+  return pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "+pad(d.getHours())+":"+pad(d.getMinutes());
+};
+function askWho(){
+  const n=prompt(t.askWho,me||"");
+  if(n===null)return false;
+  me=n.trim().slice(0,24);
+  try{localStorage.setItem(WKEY,me)}catch(e){}
+  paintWho();return true;
+}
+function paintWho(){document.getElementById("who").textContent=me?t.whoIs(me):t.whoSet}
 
 let toastT;
 function toast(msg){
@@ -401,7 +446,10 @@ function chrome(){
   document.getElementById("q").placeholder=t.search;
   document.getElementById("lang").textContent=t.lang;
   document.getElementById("add").textContent=t.add;
+  document.getElementById("send").textContent=t.send;
+  document.getElementById("merge").textContent=t.merge;
   document.getElementById("csv").textContent=t.csv;
+  paintWho();
   document.getElementById("reset").textContent=t.reset;
   document.getElementById("prt").textContent=t.print;
   document.getElementById("foot").textContent=t.foot;
@@ -508,6 +556,7 @@ function render(){
 }
 function hhmm(m){return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")}
 
+const touched=new Set();
 function row(r,i,prevEnd){
   const s=mins(r.start),e=mins(r.end),h=hrs(r.start,r.end);
   const clash=s!=null&&prevEnd!=null&&s<prevEnd;
@@ -520,7 +569,7 @@ function row(r,i,prevEnd){
   const dur=clash?'<span class="dur warn">'+esc(t.overlap)+"</span>"
     :(h!=null?'<span class="dur">'+esc(t.hrs(h))+"</span>":'<span class="dur">'+esc(t.tbd)+"</span>");
   const kindCls=r.type==="internal"?"int":(r.type==="other"?"oth":"");
-  return '<div class="row '+kindCls+(r.status==="Cancelled"?" off":"")+'" data-uid="'+r.uid+'">'
+  return '<div class="row '+kindCls+(r.status==="Cancelled"?" off":"")+(touched.has(r.uid)?" touched":"")+'" data-uid="'+r.uid+'">'
     +'<div class="cell"><span class="win">'
       +'<input type="time" value="'+esc(r.start)+'" data-i="'+i+'" data-time="start" aria-label="inicio">'
       +'<span class="dash">–</span>'
@@ -531,14 +580,17 @@ function row(r,i,prevEnd){
     +'<div class="cell people muted">'+ed(i,"people",t.phPeople)+"</div>"
     +'<div class="cell place muted">'+ed(i,"addr",t.phAddr)+(r.city?" · "+ed(i,"city"):"")
       +'<span class="note">'+ed(i,"notes",t.phNote)+"</span></div>"
-    +'<div class="cell st-cell"><button class="st s-'+esc(r.status)+'" data-st="'+i+'">'+esc(t.status[r.status])+"</button></div>"
+    +'<div class="cell st-cell"><button class="st s-'+esc(r.status)+'" data-st="'+i+'">'+esc(t.status[r.status])+"</button>"
+      +'<span class="sig">'+(r.by?(touched.has(r.uid)?'<span class="new-dot" title="'+esc(t.touchedTip)+'"></span>':"")
+        +"<b>"+esc(r.by)+"</b> · "+esc(shortDate(r.at)):esc(t.never))+"</span></div>"
     +'<div class="cell"><button class="x" data-x="'+i+'">×</button></div></div>';
 }
 
 function addOn(date){
   const uid="r"+Math.random().toString(36).slice(2,9);
-  rows.push({uid:uid,date:date,start:"",end:"",type:"DPP",customer:t.newCustomer,
-    people:"Francis Fang",status:"Pending",addr:"",city:"",notes:""});
+  const nr={uid:uid,date:date,start:"",end:"",type:"DPP",customer:t.newCustomer,
+    people:me||"Francis Fang",status:"Pending",addr:"",city:"",notes:""};
+  stamp(nr);rows.push(nr);
   fresh=uid;save();render();
   const sec=document.getElementById("d"+date);
   if(sec){sec.classList.add("pinged");setTimeout(()=>sec.classList.remove("pinged"),1200)}
@@ -549,7 +601,7 @@ function addOn(date){
 document.addEventListener("input",e=>{
   const tm=e.target.closest("input[type=time]");
   if(tm){
-    const r=rows[tm.dataset.i];r[tm.dataset.time]=tm.value;
+    const r=rows[tm.dataset.i];r[tm.dataset.time]=tm.value;stamp(r);
     if(tm.dataset.time==="start"&&r.start&&!r.end){
       const m=mins(r.start);if(m!=null)r.end=hhmm(Math.min(DAY_TO,m+60));
     }
@@ -557,7 +609,7 @@ document.addEventListener("input",e=>{
     return;
   }
   const el=e.target.closest("[contenteditable]");if(!el)return;
-  rows[el.dataset.i][el.dataset.k]=el.textContent.trim();
+  rows[el.dataset.i][el.dataset.k]=el.textContent.trim();stamp(rows[el.dataset.i]);
   clearTimeout(window.__t);window.__t=setTimeout(save,400);
 });
 document.addEventListener("keydown",e=>{
@@ -568,12 +620,12 @@ document.addEventListener("click",e=>{
   const s=e.target.closest("[data-st]");
   if(s){
     const r=rows[s.dataset.st];
-    r.status=STATUS[(STATUS.indexOf(r.status)+1)%STATUS.length];
+    r.status=STATUS[(STATUS.indexOf(r.status)+1)%STATUS.length];stamp(r);
     s.className="st s-"+r.status+" bump";s.textContent=t.status[r.status];
     save();setTimeout(render,300);return;
   }
   const k=e.target.closest("[data-kind]");
-  if(k){const r=rows[k.dataset.kind];r.type=TYPES[(TYPES.indexOf(r.type)+1)%TYPES.length];save();render();return}
+  if(k){const r=rows[k.dataset.kind];r.type=TYPES[(TYPES.indexOf(r.type)+1)%TYPES.length];stamp(r);save();render();return}
   const x=e.target.closest("[data-x]");
   if(x){
     const i=+x.dataset.x,r=rows[i];
@@ -610,11 +662,50 @@ document.getElementById("csv").onclick=()=>{
   const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
   const body=rows.slice().sort((a,b)=>(a.date+(a.start||"zz")).localeCompare(b.date+(b.start||"zz")))
     .map(r=>[r.date,wd(r.date),r.start,r.end,hrs(r.start,r.end)||"",t.type[r.type],r.customer,r.people,
-      t.status[r.status],r.addr,r.city,r.notes].map(q).join(","));
+      t.status[r.status],r.addr,r.city,r.notes,r.by||"",shortDate(r.at)].map(q).join(","));
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob(["﻿"+[t.csvHead.join(",")].concat(body).join("\r\n")],{type:"text/csv;charset=utf-8"}));
   a.download="20260914-1002-MKT-Eason Huang.csv";a.click();
   toast(t.csvDone);
+};
+document.getElementById("who").onclick=()=>askWho();
+document.getElementById("send").onclick=()=>{
+  if(!me&&!askWho())return;
+  const pack={app:"hik-visit-agenda",ref:"20260914-1002-MKT-Eason Huang",v:1,
+    by:me,at:new Date().toISOString(),rows:rows};
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(pack,null,1)],{type:"application/json"}));
+  a.download="agenda-"+(me||"edit").replace(/[^\w\u4e00-\u9fa5-]/g,"")+"-"+new Date().toISOString().slice(0,10)+".json";
+  a.click();toast(t.sent);
+};
+document.getElementById("merge").onclick=()=>document.getElementById("file").click();
+document.getElementById("file").onchange=e=>{
+  const f=e.target.files&&e.target.files[0];e.target.value="";
+  if(!f)return;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    let pack;try{pack=JSON.parse(fr.result)}catch(err){alert(t.badFile);return}
+    if(!pack||pack.app!=="hik-visit-agenda"||!Array.isArray(pack.rows)){alert(t.badFile);return}
+    const byUid={};rows.forEach(r=>byUid[r.uid]=r);
+    let add=0,upd=0,keep=0;const hit=[];
+    pack.rows.forEach(inc=>{
+      if(!inc||!inc.uid)return;
+      const cur=byUid[inc.uid];
+      if(!cur){add++;hit.push(inc);return}
+      const a=Date.parse(inc.at||"")||0,b=Date.parse(cur.at||"")||0;
+      if(a>b&&JSON.stringify(inc)!==JSON.stringify(cur)){upd++;hit.push(inc)}else keep++;
+    });
+    if(!add&&!upd){toast(t.nothing);return}
+    if(!confirm(t.mergeAsk(add,upd,keep)))return;
+    touched.clear();
+    hit.forEach(inc=>{
+      const cur=byUid[inc.uid];
+      if(cur)Object.assign(cur,inc);else rows.push(inc);
+      touched.add(inc.uid);
+    });
+    save();render();toast(t.merged(add,upd));
+  };
+  fr.readAsText(f);
 };
 addEventListener("scroll",()=>{
   document.getElementById("tools").classList.toggle("stuck",scrollY>4);
